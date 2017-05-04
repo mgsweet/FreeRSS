@@ -10,6 +10,22 @@
         <!-- Application-specific resources -->
         <ResourceDictionary>
             <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <DataTemplate x:Key="NavigationItemTemplate">
+                <Grid Width="292" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
+                        <Image Width="20" Height="20"  Source="{Binding UrlImageUri,Mode=OneTime}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Publisher, Mode=OneTime}" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                    <TextBlock Margin="11,1,0,0" Text="{Binding Unread_Num, Mode=OneTime}" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                </Grid>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <!-- 
                     Styles that define common aspects of the platform look and feel

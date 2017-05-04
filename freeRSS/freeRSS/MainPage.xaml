@@ -34,8 +34,8 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
-        
+
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -75,7 +75,6 @@
                 <Button Grid.Column="0"
                      Content="&#xE112;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
                             Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
-                        
                         >
                 </Button>
                 <Rectangle Grid.Column="1" 
@@ -95,7 +94,10 @@
                     <!--最左导航栏-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="20"/>
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="auto"/>
 
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0" Height="100">
@@ -119,11 +121,52 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left">
+                                <Grid ToolTipService.ToolTip="Unread" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
                                     <Image Width="20" Height="20"  Source="Assets/default/unread.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Grid>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Unread" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                                 <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <Grid Width="292" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid ToolTipService.ToolTip="Unread" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
+                                    <SymbolIcon Symbol="Favorite" Foreground="#E5000000" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Unread" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                                <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                            </Grid>
+                        </ListViewItem>
+                    </ListView>
+                    <SplitView Grid.Row="3">
+                        <ListView ItemTemplate="{StaticResource NavigationItemTemplate}"></ListView>
+                    </SplitView>
+                    <ListView Grid.Row="4">
+                        <ListViewItem>
+                            <Grid Width="292" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <SymbolIcon ToolTipService.ToolTip="Edit Subscription" Symbol="Repair" Grid.Column="0" FocusVisualPrimaryBrush="#FFC2B7B7" Foreground="White" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Edit Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tapped="ListViewItemAddButton_Tapped">
+                            <Grid Width="292" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <SymbolIcon ToolTipService.ToolTip="Add Subscription" Symbol="Add" Grid.Column="0" FocusVisualPrimaryBrush="#FFC2B7B7" Foreground="White" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Add Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                             </Grid>
                         </ListViewItem>
                     </ListView>
@@ -138,6 +181,7 @@
 
                     <ListView Background="#FF373737" x:Name="listViewItems" Grid.Column="0">
                     </ListView>
+
                     <ProgressBar  Grid.Column="0" IsIndeterminate="True"></ProgressBar>
 
                     <ContentControl Grid.Column="1"
