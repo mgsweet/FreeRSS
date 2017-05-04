@@ -4,6 +4,11 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using freeRSS.View;
+using System.Collections.Generic;
+using Windows.System;
+using System.Linq;
+using Windows.ApplicationModel.UserDataAccounts;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -49,26 +54,14 @@ namespace freeRSS
             RootSplitView.IsPaneOpen = RootSplitView.IsPaneOpen ? false : true;
         }
 
-
-        private async void displayAddFeedDialog()
-        {
-            ContentDialog noWifiDialog = new ContentDialog()
-            {
-                Title = "No wifi connection",
-                Content = "Check connection and try again",
-                PrimaryButtonText = "Ok"
-            };
-
-            ContentDialogResult result = await noWifiDialog.ShowAsync();
-        }
-
         /// <summary>
         /// 新建一个Subscribtion
         /// </summary>
         /// 
-        private void ListViewItemAddButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        private async void ListViewItemAddButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            displayAddFeedDialog();
+            FeedSetDialog AddFeedDialog = new FeedSetDialog();
+            await AddFeedDialog.ShowAsync();
         }
     }
 

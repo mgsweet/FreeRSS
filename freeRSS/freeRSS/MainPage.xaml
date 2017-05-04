@@ -44,8 +44,8 @@
             <!--自定义标题栏控件-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
-                <ColumnDefinition Width="7*" ></ColumnDefinition>
+                <ColumnDefinition Width="250"></ColumnDefinition>
+                <ColumnDefinition Width="*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button x:Name="PaneOpenTrigger"
                     Grid.Column="0"
@@ -98,8 +98,8 @@
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="auto"/>
-
                     </Grid.RowDefinitions>
+
                     <Grid Grid.Row="0" Height="100">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -108,10 +108,10 @@
                         </Grid.RowDefinitions>
                         <Image  Grid.Row="0" Height="40" Source="Assets/default/rss.png" 
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                        <TextBlock Text="UserName" Foreground="White" 
-                                   Grid.Row="1" HorizontalAlignment="Center" Margin="36,0,13,0"/>
+                        <TextBlock Text="FreeRSS" Foreground="White" 
+                                   Grid.Row="1" HorizontalAlignment="Center"/>
                         <TextBlock FontSize="10" Text="Today, 9:15 PM"  
-                                   Foreground="White" Grid.Row="2" HorizontalAlignment="Center" Margin="36,0,13,0"/>
+                                   Foreground="White" Grid.Row="2" HorizontalAlignment="Center"/>
                     </Grid>
                     <ListView Grid.Row="1">
                         <ListViewItem>
@@ -175,14 +175,37 @@
             <SplitView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="columnLeft" Width="3*"></ColumnDefinition>
-                        <ColumnDefinition x:Name="columnRight" Width="7*"></ColumnDefinition>
+                        <ColumnDefinition x:Name="columnLeft" Width="250"></ColumnDefinition>
+                        <ColumnDefinition x:Name="columnRight" Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
                     <ListView Background="#FF373737" x:Name="listViewItems" Grid.Column="0">
+                        <ListViewItem Padding="12,5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid ToolTipService.ToolTip="Unread" Grid.Row="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="2" Margin="-5,10,6,0" Padding="0,1,0,0">
+                                    <Image Width="20" Height="20" Source="Assets/default/unread.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Grid>
+                                <Grid Grid.Column="1" MaxHeight="100">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Rss Feed" Grid.Row="0"  Foreground="Gray" FontSize="10"/>
+                                    <TextBlock Text="· 4:00 PM" Grid.Row="0"  Foreground="Gray" FontSize="10" UseLayoutRounding="True" HorizontalAlignment="Right" Margin="160,0,0,0"/>
+                                    <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="Title Hello RSS" Foreground="White" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+                                    <TextBlock TextTrimming="CharacterEllipsis" Text="subtitle or the begin of the article" Foreground="LightGray" Grid.Row="2" FontSize="11"/>
+                                </Grid>
+                            </Grid>
+                        </ListViewItem>
                     </ListView>
 
-                    <ProgressBar  Grid.Column="0" IsIndeterminate="True"></ProgressBar>
+                    <!--加载时显示-->
+                    <ProgressBar Visibility="Collapsed" Grid.Column="0" IsIndeterminate="True"></ProgressBar>
 
                     <ContentControl Grid.Column="1"
                                     VerticalContentAlignment="Stretch" 
