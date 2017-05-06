@@ -12,9 +12,9 @@ namespace freeRSS.View
     {
         public enum FeedGetResult
         {
-            SignInOK,
-            SignInFail,
-            SignInCancel,
+            getFeedSuccess,
+            getFeedFail,
+            Cancel,
             Nothing
         }
 
@@ -23,10 +23,23 @@ namespace freeRSS.View
         public FeedSetDialog()
         {
             this.InitializeComponent();
+            this.Opened += FeedSetDialog_Opened;
+        }
+
+        void FeedSetDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        {
+            this.Result = FeedGetResult.Nothing;
         }
 
         private void Search_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
+            // Ensure the Feed or Site URL fields isn't empty. If a required field
+            // is empty, set args.Cancel = true to keep the dialog open.
+            if (string.IsNullOrEmpty(feedTextBox.Text))
+            {
+                args.Cancel = true;
+                errorTextBlock.Text = "Feed or Site URL is required.";
+            }
             return;
         }
 

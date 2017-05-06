@@ -17,13 +17,14 @@ namespace freeRSS
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
+
+    
     public sealed partial class MainPage : Page
     {
         public MainPage()
         {
             this.InitializeComponent();
             this.SizeChanged += MainPage_SizeChanged;
-
             setTitleUI();
         }
 
@@ -54,25 +55,19 @@ namespace freeRSS
             RootSplitView.IsPaneOpen = RootSplitView.IsPaneOpen ? false : true;
         }
 
-        /// <summary>
-        /// 新建一个Subscribtion
-        /// </summary>
-        /// 
-        private async void ListViewItemAddButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            FeedSetDialog AddFeedDialog = new FeedSetDialog();
-            await AddFeedDialog.ShowAsync();
-        }
+        
 
         /// <summary>
-        /// 更强大的自适应控制
+        /// 监控页面大小变化，做自适应改变
         /// </summary>
-        /// 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateLayout(e.NewSize.Width);
         }
 
+        /// <summary>
+        /// 更强大的自适应控制
+        /// </summary>
         private void UpdateLayout(double newWidth)
         {
             // 固定值
@@ -125,6 +120,28 @@ namespace freeRSS
             }
             
         }
+
+
+        /// <summary>
+        /// 修改一个Subscribtion
+        /// </summary>
+        private async void AddFeedButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            FeedSetDialog AddFeedDialog = new FeedSetDialog();
+            await AddFeedDialog.ShowAsync();
+            FeedEditListView.SelectedItem = null;
+        }
+
+        /// <summary>
+        /// 新建一个Subscribtion
+        /// </summary>
+        private async void EditFeedButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            FeedSetDialog AddFeedDialog = new FeedSetDialog();
+            await AddFeedDialog.ShowAsync();
+            FeedEditListView.SelectedItem = null;
+        }
+
     }
 
 

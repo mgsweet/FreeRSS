@@ -135,8 +135,9 @@
                     <SplitView Grid.Row="3">
                         <ListView ItemTemplate="{StaticResource NavigationItemTemplate}"></ListView>
                     </SplitView>
-                    <ListView Grid.Row="4">
-                        <ListViewItem>
+                    <ListView x:Name="FeedEditListView"
+                              Grid.Row="4">
+                        <ListViewItem Tapped="EditFeedButton_Tapped">
                             <Grid HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="36"/>
@@ -148,7 +149,7 @@
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Edit Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                             </Grid>
                         </ListViewItem>
-                        <ListViewItem Tapped="ListViewItemAddButton_Tapped">
+                        <ListViewItem Tapped="AddFeedButton_Tapped">
                             <Grid HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="36"/>
