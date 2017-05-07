@@ -147,7 +147,7 @@
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <SymbolIcon ToolTipService.ToolTip="Edit Subscription" 
-                                            Symbol="Repair" Grid.Column="0" FocusVisualPrimaryBrush="#FFC2B7B7" Foreground="White" HorizontalAlignment="Left"/>
+                                            Symbol="Repair" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Edit Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                             </Grid>
                         </ListViewItem>
@@ -158,7 +158,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <SymbolIcon ToolTipService.ToolTip="Add Subscription" Symbol="Add" Grid.Column="0" FocusVisualPrimaryBrush="#FFC2B7B7" Foreground="White" HorizontalAlignment="Left"/>
+                                <SymbolIcon ToolTipService.ToolTip="Add Subscription" Symbol="Add" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Add Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                             </Grid>
                         </ListViewItem>
