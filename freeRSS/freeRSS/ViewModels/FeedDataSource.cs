@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace freeRSS.ViewModels
 {
-    class FeedDataSource
+    public static class FeedDataSource
     {
+        // Construct the feeds it want to read, use a certen api for the dev
+
     }
 }
