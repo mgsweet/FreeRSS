@@ -10,6 +10,46 @@
         <!-- Application-specific resources -->
         <ResourceDictionary>
             <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <DataTemplate x:Key="NavigationItemTemplate">
+                <Grid Width="292" HorizontalAlignment="Right">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="36"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
+                        <Image Width="20" Height="20"  Source="{Binding UrlImageUri,Mode=OneTime}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="{Binding Publisher, Mode=OneTime}" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                    <TextBlock Margin="11,1,0,0" Text="{Binding Unread_Num, Mode=OneTime}" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RSS_ArticleTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid ToolTipService.ToolTip="Unread" Grid.Row="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="2" Margin="-5,10,6,0" Padding="0,1,0,0">
+                        <Image Width="20" Height="20" Source="{Binding  UrlImageUri,Mode=OneTime}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Grid>
+                    <Grid Grid.Column="1" MaxHeight="100">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="{Binding feedName, Mode=OneTime}" Grid.Row="0"  Foreground="Gray" FontSize="10" Margin="0,5,0,0"/>
+                        <!-- time display format: "· 4:00 PM" -->
+                        <TextBlock Text="{Binding articleUpdateTime, Mode=OneTime}" Grid.Row="0"  Foreground="Gray" FontSize="10" UseLayoutRounding="True" HorizontalAlignment="Right" Margin="160,0,0,0"/>
+                        <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding articleTitle, Mode=OneTime}" Foreground="White" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+                        <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding articalSubTitle}" Foreground="LightGray" Grid.Row="2" FontSize="11" Margin="0,0,0,5"/>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
             <ResourceDictionary.MergedDictionaries>
                 <!-- 
                     Styles that define common aspects of the platform look and feel

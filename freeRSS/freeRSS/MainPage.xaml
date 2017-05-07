@@ -8,44 +8,18 @@
     mc:Ignorable="d">
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
-        <!-- Adaptive triggers -->
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState>
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-        
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="6*"></RowDefinition>
+            <RowDefinition Height="683*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#D8000000" Height="32">
             <!--自定义标题栏控件-->
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="3*"></ColumnDefinition>
-                <ColumnDefinition Width="7*" ></ColumnDefinition>
+                <ColumnDefinition x:Name="columnLeftBar" Width="250"></ColumnDefinition>
+                <ColumnDefinition x:Name="columnRightBar" Width="*" ></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button x:Name="PaneOpenTrigger"
                     Grid.Column="0"
@@ -55,7 +29,8 @@
                     HorizontalAlignment="Left"
                     Width="48" Height="32" 
                     Foreground="White" Margin="0,0,0,-1" 
-                    VerticalAlignment="Bottom" Click="PaneOpenTrigger_Click"/>
+                    VerticalAlignment="Bottom" 
+                    Click="PaneOpenTrigger_Click"/>
             <Grid Grid.Column="1" Background="#FF373737">
                 <TextBlock Text="Enjoy Read and write with FreeRSS" 
                            VerticalAlignment="Center" FontSize="12" FontFamily="Segoe UI" 
@@ -67,37 +42,54 @@
                      Width="48" Height="32" Foreground="White" Background="#33000000"></Button>
             </Grid>
 
-            <Grid  Grid.Column="2">
+            <Grid Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
-                     Content="&#xE112;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                            Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
-                        
-                        >
-                </Button>
+                        Content="&#xE112;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
+                        />
+
                 <Rectangle Grid.Column="1" 
                     x:Name="GridTitleBar" Fill="#00000000"/>
+
+                <Button Grid.Column="2"
+                        ToolTipService.ToolTip="Favorite"
+                        Content="&#xE24A;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
+                        />
+                <Button Grid.Column="3"
+                        ToolTipService.ToolTip="Share"
+                        Content="&#xE72D;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}" Margin="0,0,170,0"
+                        />
             </Grid>
         </Grid>
 
         <SplitView Grid.Row="1"
                    x:Name="RootSplitView"
-                   Background="White"
                    DisplayMode="CompactOverlay" 
                    CompactPaneLength="48"
                    IsPaneOpen="False"
+                   OpenPaneLength="250"
+                   Grid.RowSpan="2"
+                   PaneBackground="#FF252525" Background="#FF373737"
                    >
             <SplitView.Pane>
-                <Grid Background="#D8000000">
+                <Grid>
                     <!--最左导航栏-->
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="20"/>
                         <RowDefinition Height="*" />
-
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
+
                     <Grid Grid.Row="0" Height="100">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -106,24 +98,68 @@
                         </Grid.RowDefinitions>
                         <Image  Grid.Row="0" Height="40" Source="Assets/default/rss.png" 
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                        <TextBlock Text="UserName" Foreground="White" 
-                                   Grid.Row="1" HorizontalAlignment="Center" Margin="36,0,13,0"/>
+                        <TextBlock Text="FreeRSS" Foreground="White" 
+                                   Grid.Row="1" HorizontalAlignment="Center"/>
                         <TextBlock FontSize="10" Text="Today, 9:15 PM"  
-                                   Foreground="White" Grid.Row="2" HorizontalAlignment="Center" Margin="36,0,13,0"/>
+                                   Foreground="White" Grid.Row="2" HorizontalAlignment="Center"/>
                     </Grid>
                     <ListView Grid.Row="1">
                         <ListViewItem>
-                            <Grid Width="292" HorizontalAlignment="Right">
+                            <Grid HorizontalAlignment="Right" Width="222">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="36"/>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left">
+                                <Grid ToolTipService.ToolTip="Unread" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" 
+                                      VerticalAlignment="Center" CornerRadius="2">
                                     <Image Width="20" Height="20"  Source="Assets/default/unread.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                 </Grid>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Unread" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                                 <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem>
+                            <Grid  Width="222" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid ToolTipService.ToolTip="Articles that you've starred" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
+                                    <SymbolIcon Symbol="Favorite" Foreground="#E5000000" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Favorites" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                                <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                            </Grid>
+                        </ListViewItem>
+                    </ListView>
+                    <SplitView Grid.Row="3">
+                        <ListView ItemTemplate="{StaticResource NavigationItemTemplate}"></ListView>
+                    </SplitView>
+                    <ListView x:Name="FeedEditListView"
+                              Grid.Row="4">
+                        <ListViewItem Tapped="EditFeedButton_Tapped">
+                            <Grid HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <SymbolIcon ToolTipService.ToolTip="Edit Subscription" 
+                                            Symbol="Repair" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Edit Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tapped="AddFeedButton_Tapped">
+                            <Grid HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="36"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <SymbolIcon ToolTipService.ToolTip="Add Subscription" Symbol="Add" Grid.Column="0" Foreground="White" HorizontalAlignment="Left"/>
+                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Add Subscription" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                             </Grid>
                         </ListViewItem>
                     </ListView>
@@ -132,13 +168,16 @@
             <SplitView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="columnLeft" Width="3*"></ColumnDefinition>
-                        <ColumnDefinition x:Name="columnRight" Width="7*"></ColumnDefinition>
+                        <ColumnDefinition x:Name="columnLeft" Width="250"></ColumnDefinition>
+                        <ColumnDefinition x:Name="columnRight" Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ListView Background="#FF373737" x:Name="listViewItems" Grid.Column="0">
-                    </ListView>
-                    <ProgressBar  Grid.Column="0" IsIndeterminate="True"></ProgressBar>
+                    <ListView Background="#FF373737" 
+                              x:Name="RSS_ArticleListView" Grid.Column="0"
+                              ItemTemplate="{StaticResource RSS_ArticleTemplate}"/>
+
+                    <!--加载时显示-->
+                    <ProgressBar Visibility="Collapsed" Grid.Column="0" IsIndeterminate="True"></ProgressBar>
 
                     <ContentControl Grid.Column="1"
                                     VerticalContentAlignment="Stretch" 
