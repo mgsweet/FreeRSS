@@ -1,7 +1,7 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
-    "MvvmLight": "5.3.0"
+    "SQLitePCL": "3.8.7.2"
   },
   "frameworks": {
     "uap10.0": {}

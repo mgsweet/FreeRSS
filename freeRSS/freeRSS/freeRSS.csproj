@@ -97,6 +97,8 @@
     </Compile>
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\RssParser.cs" />
+    <Compile Include="Common\Serializer.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -106,7 +108,6 @@
     <Compile Include="ViewModels\FeedDataSource.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-
     <Compile Include="View\FeedSetDialog.xaml.cs">
       <DependentUpon>FeedSetDialog.xaml</DependentUpon>
     </Compile>
@@ -149,7 +150,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="SQLite.UWP.2015, Version=3.18.0">
+      <Name>SQLite for Universal Windows Platform</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
