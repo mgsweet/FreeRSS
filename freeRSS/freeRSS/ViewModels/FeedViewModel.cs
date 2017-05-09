@@ -98,7 +98,7 @@ namespace freeRSS.ViewModels
 
         // 4. 对应图标
         public BitmapIcon _head = new BitmapIcon();
-
+         
         // 5. 用来存储这个feed可以拿到的文章
         public ObservableCollection<ArticleModel> Articles { get; }
 
