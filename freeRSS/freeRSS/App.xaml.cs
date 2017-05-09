@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using freeRSS.Services;
 
 namespace freeRSS
 {
@@ -47,6 +48,8 @@ namespace freeRSS
 #endif
             Frame rootFrame = Window.Current.Content as Frame;
 
+            SQLiteService.LoadDatabase();
+            
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
             if (rootFrame == null)

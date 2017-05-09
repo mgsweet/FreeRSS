@@ -21,25 +21,25 @@ namespace freeRSS.ViewModels
         //}
 
         //// Get the Feeds (not include the favourite Feed)
-        public static async Task<List<FeedViewModel>> GetFeedsAsync()
-        {
-            var feeds = new List<FeedViewModel>();
-            var feedFile =
-                await ApplicationData.Current.LocalFolder.TryGetItemAsync("feeds.dat") as StorageFile ??
-                await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/feeds.dat"));
-            if (feedFile != null)
-            {
-                var bytes = (await FileIO.ReadBufferAsync(feedFile)).ToArray();
-                var feedData = Serializer.Deserialize<string[][]>(bytes);
-                foreach (var feed in feedData)
-                {
-                    var feedVM = new FeedViewModel { Name = feed[0], Link = new Uri(feed[1]) };
-                    feeds.Add(feedVM);
-                    var withoutAwait = feedVM.RefreshAsync();
-                }
-            }
-            return feeds;
-        }
+        //public static async Task<List<FeedViewModel>> GetFeedsAsync()
+        //{
+        //    var feeds = new List<FeedViewModel>();
+        //    var feedFile =
+        //        await ApplicationData.Current.LocalFolder.TryGetItemAsync("feeds.dat") as StorageFile ??
+        //        await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/feeds.dat"));
+        //    if (feedFile != null)
+        //    {
+        //        var bytes = (await FileIO.ReadBufferAsync(feedFile)).ToArray();
+        //        var feedData = Serializer.Deserialize<string[][]>(bytes);
+        //        foreach (var feed in feedData)
+        //        {
+        //            var feedVM = new FeedViewModel { Name = feed[0], Link = new Uri(feed[1]) };
+        //            feeds.Add(feedVM);
+        //            var withoutAwait = feedVM.RefreshAsync();
+        //        }
+        //    }
+        //    return feeds;
+        //}
 
         //// Retrieves feed data from the server and updates the appropriate FeedViewModel properties.
         //private static  async Task<bool> TryGetFeedAsync(FeedViewModel feedViewModel, CancellationToken? cancellationToken = null)
@@ -48,10 +48,10 @@ namespace freeRSS.ViewModels
         //}
 
         //// Attempts to update the feed with new data from the server.
-        public static async Task RefreshAsync(this FeedViewModel feedViewModel, CancellationToken? cancellationToken = null)
-        {
+        //public static async Task RefreshAsync(this FeedViewModel feedViewModel, CancellationToken? cancellationToken = null)
+        //{
 
-        }
+        //}
 
         //// 保存喜欢的文章
         //public static async Task SaveFavoritesAsync(this FeedViewModel favorites)
