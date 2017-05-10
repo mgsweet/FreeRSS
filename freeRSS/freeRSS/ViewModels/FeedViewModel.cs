@@ -80,7 +80,7 @@ namespace freeRSS.ViewModels
             }
         }
 
-        // 2. feed的名字， （可以自行修改么？还是说用rss返回的总体的title？）
+        // 2. feed的名字， （可以自行修改么？还是说用rss返回的总体的title？ 返回总体的Title）
         private string _name;
         public string Name { get { return _name; } set { SetProperty(ref _name, value); } }
 

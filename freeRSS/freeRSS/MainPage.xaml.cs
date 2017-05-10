@@ -26,6 +26,8 @@ namespace freeRSS
             this.InitializeComponent();
             this.SizeChanged += MainPage_SizeChanged;
             setTitleUI();
+            
+            // get view model
         }
 
         /// <summary>
