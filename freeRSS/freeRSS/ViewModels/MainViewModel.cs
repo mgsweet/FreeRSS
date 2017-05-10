@@ -17,6 +17,7 @@ namespace freeRSS.ViewModels
         public MainViewModel()
         {
             Feeds = new ObservableCollection<FeedViewModel>();
+
         }
 
         // Collection of Rss feeds
