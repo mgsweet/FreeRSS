@@ -8,6 +8,10 @@ using System.Collections.ObjectModel;
 
 using freeRSS.Common;
 using freeRSS.Models;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace freeRSS.ViewModels
 {
@@ -112,6 +116,72 @@ namespace freeRSS.ViewModels
                 SetProperty(ref _lastSyncDateTime, value);
             }
         }
+
+        // 7. shortcutIcon
+        private ImageSource _shortcutIcon;
+        public ImageSource ShortcutIcon
+        {
+            set
+            {
+                SetProperty(ref _shortcutIcon, value);
+            }
+            get
+            {
+                return _shortcutIcon;
+            }
+        }
+
+        // 8. shortcutIconSource
+        private string _shortcutIconSourceName;
+        public string ShortcutIconSourceName
+        {
+            set
+            {
+                SetProperty(ref _shortcutIconSourceName, value);
+                setShortcutIcon();
+            }
+            get
+            {
+                return _shortcutIconSourceName;
+            }
+        }
+
+        // 9. total Unread Num
+        // 要考虑下是不是每次触发了unread都去遍历一次article看有多少文章未读，还是直接减一
+        private int _unreadNum;
+        public int UnreadNum
+        {
+            set
+            {
+                SetProperty(ref _unreadNum, value);
+            }
+            get
+            {
+                return _unreadNum;
+            }
+        } 
+
+        /// <summary>
+        /// set the shourcut img's source async.
+        /// </summary>
+        public async void setShortcutIcon()
+        {
+            if (_shortcutIconSourceName== "")
+            {
+                //若名字为空用默认ICON
+                this._shortcutIcon = new BitmapImage(new Uri("ms-appx:///Assets/default/FeedHead.png"));
+                this._shortcutIconSourceName = "ms-appx:///Assets/default/FeedHead.png";
+            }
+            else
+            {
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(_shortcutIconSourceName);
+                IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
+                BitmapImage bitmapImage = new BitmapImage();
+                await bitmapImage.SetSourceAsync(fileStream);
+                this._shortcutIcon = bitmapImage;
+            }
+        }
+
 
         /// <summary>
         /// Gets the articles collection as an instance of type Object.

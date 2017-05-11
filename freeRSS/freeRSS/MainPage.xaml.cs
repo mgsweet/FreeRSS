@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Windows.System;
 using System.Linq;
 using Windows.ApplicationModel.UserDataAccounts;
+using freeRSS.ViewModels;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -21,13 +22,26 @@ namespace freeRSS
     
     public sealed partial class MainPage : Page
     {
+
+        public MainViewModel ViewModel { get; } = new MainViewModel();
+
         public MainPage()
         {
             this.InitializeComponent();
-            this.SizeChanged += MainPage_SizeChanged;
-            setTitleUI();
-            
+
             // get view model
+            this.Loaded += async (sender, args) =>
+            {
+
+                //viewModel 初始化
+                ViewModel.InitializeFeedsAsync();
+
+                //自适应监控窗口变化
+                this.SizeChanged += MainPage_SizeChanged;
+
+                //设置顶部UI
+                setTitleUI();
+            };
         }
 
         /// <summary>
@@ -144,6 +158,15 @@ namespace freeRSS
             FeedEditListView.SelectedItem = null;
         }
 
+        private void FeedTotalList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            FeedsList.SelectedItem = null;
+        }
+
+        private void FeedsList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            FeedTotalList.SelectedItem = null;
+        }
     }
 
 
