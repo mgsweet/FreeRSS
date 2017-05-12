@@ -8,17 +8,66 @@ using System.Collections.ObjectModel;
 
 using freeRSS.Common;
 using freeRSS.Models;
+using freeRSS.Services;
+using freeRSS.Schema;
 
 namespace freeRSS.ViewModels
 {
     public class FeedViewModel : BindableBase
     {
+        // 这个类里面可以涉及到数据库的用户可从界面修改的属性应该只有Name和Description而已
 
-        // 初始化函数
-        public FeedViewModel ()
+        private int _id;
+        public int Id { get; private set; }
+
+        // 从get到的xml里面拿默认设置，用户可以自定义
+        private string _name;
+        public string Name
         {
-            Articles = new ObservableCollection<ArticleModel>();
+            get { return _name; }
+            set { SetProperty(ref _name, value); }
+        }
 
+        private Uri _source;
+        public Uri Source
+        {
+            get { return _source; }
+            set
+            {
+                if (SetProperty(ref _source, value))
+                    OnPropertyChanged(SourceAsString);
+            }
+        }
+
+        // 图标应该是不能够再给用户设置的，所以这里就没有有SourceAsString来给用户方便自己输入string型的URI
+        private Uri _iconSrc;
+        public Uri IconSrc
+        {
+            get { return _iconSrc; }
+            set { SetProperty(ref _iconSrc, value); }
+        }
+
+        // 用户按一次刷新键之后它就会有可能进行更新
+        private string _lastBuildedTime;
+        public string LastBuildedTime
+        {
+            get { return _lastBuildedTime; }
+            set { SetProperty(ref _lastBuildedTime, value); }
+        }
+
+        // 从get到的xml里面拿默认设置，用户可以自定义
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { SetProperty(ref _description, value); }
+        }
+
+        // 存放属于这个Feed的最新的Articles
+        public ObservableCollection<ArticleModel> Articles { get; }
+
+        private void SetListeningPropertyChanged()
+        {
             // 一旦有改变就更新视图
             Articles.CollectionChanged += (s, e) =>
             {
@@ -30,25 +79,62 @@ namespace freeRSS.ViewModels
             };
         }
 
-
-        // 类中的相关变量
-
-        // 1. Uri 相关
-        // LinkAsString 就是为了uri和setstring的时候方便转换而已
-        public Uri Link
+        // 特殊的FeedViewModel：StarredFeed的构建，就使用默认的吧
+        // 如果需要添加unread的Viewmodel的话，需要传一个int来标识就好
+        // 然后要把isStarredFeedViewModel这个bool量换成一个int值用三个值来标识是普通的，还是喜欢的还是未读的
+        public FeedViewModel()
         {
-            get { return _link;}
-            set
-            {
-                if (SetProperty(ref _link, value))
-                    OnPropertyChanged(nameof(LinkAsString));
-            }
+            // 实际上把它作为了StarredFeedViewModel来构建
+            // StarredFeedViewModel的id就用数据库里面不可能出现的0吧，如果加上unread栏的话，unread栏的Id使用-1
+            // 诶这样子其实可以通过id是否大于0来判断是不是普通的FeedviewModel，美滋滋
+            Id = 0;
+            Name = "My Favourites";
+            Description = "There are all my favourite articles.";
+            Source = null;
+            IconSrc = null;
+            LastBuildedTime = DateTime.Now.ToString();
+
+            Articles = new ObservableCollection<ArticleModel>();
+
+            SetListeningPropertyChanged();
         }
-        private Uri _link;
-        
-        public string LinkAsString
+
+        // 初始化函数, 通过在mainviewmodel里面获得的feeds列表构建所要的FeedViewModel
+        public FeedViewModel (FeedInfo f)
         {
-            get { return Link?.OriginalString ?? String.Empty; }
+            // 通过给进来的FeedInfo来设置各种与数据库相关的属性的值
+            Id = f.Id;
+            Name = f.Name;
+            // 可能这里的source会有两次重复设置，注意一下避免冗余
+            Source = new Uri(f.Source);
+            SourceAsString = f.Source;
+            IconSrc = new Uri(f.IconSrc);
+            LastBuildedTime = f.LastBuildedTime;
+            Description = f.Description;
+
+            Articles = new ObservableCollection<ArticleModel>();
+
+            SetListeningPropertyChanged();
+        }
+
+        public FeedInfo AbstractInfo()
+        {
+            return new FeedInfo()
+            {
+                Id = this.Id, 
+                Name = this.Name,
+                Source = this.SourceAsString,
+                IconSrc = this.IconSrc.ToString(),
+                LastBuildedTime = this.LastBuildedTime,
+                Description = this.Description
+            };
+        }
+
+
+        // 类中的相关属性
+        public string SourceAsString
+        {
+            get { return Source?.OriginalString ?? string.Empty; }
             set
             {
                 if (string.IsNullOrWhiteSpace(value)) return;
@@ -69,7 +155,7 @@ namespace freeRSS.ViewModels
                     Uri uri = null;
                     if (Uri.TryCreate(value.Trim(), UriKind.Absolute, out uri))
                     {
-                        Link = uri;
+                        Source = uri;
                     }
                     else
                     {
@@ -77,39 +163,6 @@ namespace freeRSS.ViewModels
                         ErrorMessage = INVALID_URL_MESSAGE;
                     }
                 }
-            }
-        }
-
-        // 2. feed的名字， （可以自行修改么？还是说用rss返回的总体的title？）
-        private string _name;
-        public string Name { get { return _name; } set { SetProperty(ref _name, value); } }
-
-        // 3. feed的总体描述，可以在rss读到
-        private string _description;
-        public string Description
-        {
-            get { return _description; }
-            set { SetProperty(ref _description, value); }
-        }
-
-        // 4. Symbol, 是每个feed开头的那个表示符号，好像是可以写死就好, 只读吧，Windows里面给多了一个set，好像没有什么用处
-        //private Symbol _symbol = Symbol.PostUpdate;
-        //public Symbol Symbol { get { return _symbol; } }
-
-        // 4. 对应图标
-        public BitmapIcon _head = new BitmapIcon();
-         
-        // 5. 用来存储这个feed可以拿到的文章
-        public ObservableCollection<ArticleModel> Articles { get; }
-
-        // 6. 最近更新时间
-        private DateTime _lastSyncDateTime;
-        public DateTime LastSyncDateTime
-        {
-            get { return _lastSyncDateTime; }
-            set
-            {
-                SetProperty(ref _lastSyncDateTime, value);
             }
         }
 
@@ -123,9 +176,9 @@ namespace freeRSS.ViewModels
         public bool IsNotEmpty => !IsEmpty;
 
         // judge if the selected bar is the favouritefeed(column)
-        public bool IsFavouritesFeed { get; set; }
+        public bool IsStarredFeed { get; set; }
 
-        public bool IsNotFavouritesOrInError => !IsFavouritesFeed && !IsInError;
+        public bool IsNotFavouritesOrInError => !IsStarredFeed && !IsInError;
 
         //  下面的属性是用来辅助操作的
 
@@ -187,7 +240,7 @@ namespace freeRSS.ViewModels
         /// 即系通过link来进行一次哈希就可以拿到一个唯一标识的hash_id
         /// </summary>
         public override int GetHashCode() =>
-            Link?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
+            Source?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
 
 
         private const string NOT_HTTP_MESSAGE = "Sorry. The URL must begin with http:// or https://";
