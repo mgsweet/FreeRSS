@@ -158,14 +158,21 @@ namespace freeRSS
             FeedEditListView.SelectedItem = null;
         }
 
-        private void FeedTotalList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            FeedsList.SelectedItem = null;
-        }
-
-        private void FeedsList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        /// <summary>
+        /// 点击FeedListView里的Item
+        /// </summary>
+        private void FeedsList_ItemClick(object sender, ItemClickEventArgs e)
         {
             FeedTotalList.SelectedItem = null;
+            ViewModel.CurrentFeed = (FeedViewModel)e.ClickedItem;
+        }
+
+        /// <summary>
+        /// 点击全部Unread或者点击查看喜欢的文章
+        /// </summary>
+        private void FeedTotalList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            FeedsList.SelectedItem = null;
         }
     }
 

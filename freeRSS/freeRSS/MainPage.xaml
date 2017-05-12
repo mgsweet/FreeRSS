@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:freeRSS"
+    xmlns:models="using:freeRSS.Models" 
     xmlns:viewmodels="using:freeRSS.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -45,7 +46,8 @@
             </Grid>
         </DataTemplate>
 
-        <DataTemplate x:Key="RSS_ArticleTemplate">
+        <DataTemplate x:Key="RSS_ArticleTemplate"
+                      x:DataType="models:ArticleModel">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -60,11 +62,11 @@
                         <RowDefinition/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{Binding feedName, Mode=OneTime}" Grid.Row="0"  Foreground="Gray" FontSize="10" Margin="0,5,0,0"/>
+                    <TextBlock Text="{Binding ViewModel.CurrentFeed.Name, Mode=OneWay}" Grid.Row="0"  Foreground="Gray" FontSize="10" Margin="0,5,0,0"/>
                     <!-- time display format: "· 4:00 PM" -->
-                    <TextBlock Text="{Binding articleUpdateTime, Mode=OneTime}" Grid.Row="0"  Foreground="Gray" FontSize="10" UseLayoutRounding="True" HorizontalAlignment="Right" Margin="160,0,0,0"/>
-                    <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{Binding articleTitle, Mode=OneTime}" Foreground="White" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding articalSubTitle}" Foreground="LightGray" Grid.Row="2" FontSize="11" Margin="0,0,0,5"/>
+                    <TextBlock Text="· 4:00 PM" Grid.Row="0"  Foreground="Gray" FontSize="10" UseLayoutRounding="True" HorizontalAlignment="Right" Margin="160,0,0,0"/>
+                    <TextBlock TextWrapping="Wrap" TextTrimming="CharacterEllipsis" Text="{x:Bind Title, Mode=OneTime}" Foreground="White" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    <TextBlock TextTrimming="CharacterEllipsis" Text="{x:Bind Description}" Foreground="LightGray" Grid.Row="2" FontSize="11" Margin="0,0,0,5"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -166,7 +168,10 @@
                         <TextBlock FontSize="10" Text="Today, 9:15 PM"  
                                    Foreground="White" Grid.Row="2" HorizontalAlignment="Center"/>
                     </Grid>
-                    <ListView x:Name="FeedTotalList" Grid.Row="1" Tapped="FeedTotalList_Tapped">
+                    <ListView x:Name="FeedTotalList" 
+                              IsItemClickEnabled="True"
+                              Grid.Row="1" 
+                              ItemClick="FeedTotalList_ItemClick">
                         <ListViewItem>
                             <Grid HorizontalAlignment="Right" Width="222">
                                 <Grid.ColumnDefinitions>
@@ -197,11 +202,15 @@
                             </Grid>
                         </ListViewItem>
                     </ListView>
-                    <SplitView Grid.Row="3">
+                    <!--FeedsList-->
+                        <SplitView Grid.Row="3">
                         <ListView x:Name="FeedsList"
+                                  IsItemClickEnabled="True"
                                   ItemsSource="{x:Bind ViewModel.Feeds, Mode=OneWay}"
-                                  ItemTemplate="{StaticResource FeedsListItemTemplate}" Tapped="FeedsList_Tapped">
+                                  ItemTemplate="{StaticResource FeedsListItemTemplate}"
+                                  ItemClick="FeedsList_ItemClick">
                         </ListView>
+                        
                     </SplitView>
                     <ListView x:Name="FeedEditListView"
                               Grid.Row="5">
@@ -240,7 +249,8 @@
 
                     <ListView Background="#FF373737"
                               x:Name="RSS_ArticleListView" Grid.Column="0"
-                              ItemTemplate="{StaticResource RSS_ArticleTemplate}"/>
+                              ItemTemplate="{StaticResource RSS_ArticleTemplate}"
+                              ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}"/>
 
                     <!--加载时显示-->
                     <ProgressBar Visibility="Collapsed" Grid.Column="0" IsIndeterminate="True"></ProgressBar>

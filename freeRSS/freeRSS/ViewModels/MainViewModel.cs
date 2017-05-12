@@ -28,6 +28,13 @@ namespace freeRSS.ViewModels
         public async Task InitializeFeedsAsync()
         {
             UItest_FeedsList();
+            //getIconTest();
+
+        }
+
+        public async void getIconTest()
+        {
+            await WebIconDownloadTool.DownLoadIconFrom_WebUri("http://www.cnblogs.com/", "111");
         }
 
         public void UItest_FeedsList()
@@ -42,8 +49,8 @@ namespace freeRSS.ViewModels
                 for (int j = 0; j < 5; j++)
                 {
                     var article = new Models.ArticleModel();
-                    article.Title = "126 test article " + i;
-                    article.Description = "126 mail" + i;
+                    article.Title = "126 test article " + j;
+                    article.Description = "126 mail" + j;
                     article.Link = new Uri("http://www.126.com");
                     feed.Articles.Add(article);
                 }
@@ -68,28 +75,6 @@ namespace freeRSS.ViewModels
                     if (_currentFeed.Articles.Count > 0)
                     {
                         CurrentArticle = _currentFeed.Articles.First();
-                    }
-                    else
-                    {
-                        // If the articles have not yet been loaded, clear CurrentArticle then
-                        // wait until the articles are loaded before selecting the first one. 
-                        CurrentArticle = null;
-                        NotifyCollectionChangedEventHandler handler = null;
-                        handler = (s, e) =>
-                        {
-                            if (e.Action == NotifyCollectionChangedAction.Add)
-                            {
-                                _currentFeed.Articles.CollectionChanged -= handler;
-
-                                // Use the dispatcher to update CurrentArticle. This fixes a timing issue that happens 
-                                // on app launch where the first article does not appear selected in the UI because 
-                                // change notification occurs for CurrentArticle before the UI has finished loading.
-                                var withoutAwait = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
-                                    Windows.UI.Core.CoreDispatcherPriority.Normal,
-                                    () => CurrentArticle = _currentFeed.Articles.First());
-                            }
-                        };
-                        _currentFeed.Articles.CollectionChanged += handler;
                     }
                 }
             }
