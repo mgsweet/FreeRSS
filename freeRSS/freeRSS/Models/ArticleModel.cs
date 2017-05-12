@@ -4,38 +4,66 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using freeRSS.Common;
+using freeRSS.Services;
+using freeRSS.Schema;
 
 namespace freeRSS.Models
 {
     public class ArticleModel : BindableBase
     {
         public string Title { get; set; }
+
+        public int FeedId { get; set; }
+
         public string Description { get; set; }
-        public Uri Link { get; set; }
 
-        public DateTimeOffset PublishedDate { get; set; }
+        // 这里不需要SourceAsString,因为这个是一构建好之后就不可以改变的了，
+        // 只是在存数据库的时候需要转换成string，在构建的时候直接在构造函数里面写好new Uri即可
+        public Uri Source { get; set; }
 
-        private bool? _isStarred = false;
-        public bool? IsStarred
+        // 因为实际上这个pubDate其实是确定的，而且也不会有Datetime上面的更新
+        // 所以这里直接把它存为string即可，也方便前端的绑定
+        public string PubDate { get; set; }
+
+        private bool _isStarred = false;
+        public bool IsStarred
         {
             get { return _isStarred; }
             set { SetProperty(ref _isStarred, value); }
         }
 
-        private bool _isReaded = false;
-        public bool IsReaded
+        private bool _unread = true;
+        public bool UnRead
         {
-            get { return _isReaded; }
-            set { SetProperty(ref _isReaded, value); }
+            get { return _unread; }
+            set { SetProperty(ref _unread, value); }
         }
 
-        //  Helpful function 
+        // Construction From ArticleInfo
+        public ArticleModel(ArticleInfo a)
+        {
+            Title = a.Title;
+            FeedId = a.FeedId;
+            Description = a.Description;
+            Source = new Uri(a.Source);
+            PubDate = a.PubDate;
+            IsStarred = a.Isstarred;
+            UnRead = a.Unread;
+        }
 
-        // Get a formatted version of the article's publication date.
-        public string PublishedDateFormatted => PublishedDate.ToString("MMM dd, yyyy H:mm tt").ToUpper();
-
-        // Update the favourtie articles record
-        //需要调用到mainviewmodel里面的同步函数，需要空间的命名，在这里就先不实现吧
-        // public void SyncFavouritesAri
+        // 获得一个关于这个ArticleModel的ArticleInfo实例
+        public ArticleInfo AbstractInfo()
+        {
+            return new ArticleInfo()
+            {
+                FeedId = this.FeedId,
+                Title = this.Title,
+                PubDate = this.PubDate,
+                Source = this.Source.ToString(),
+                Description = this.Description,
+                Unread = this.UnRead,
+                Isstarred = this.IsStarred
+            };
+        }
     }
 }

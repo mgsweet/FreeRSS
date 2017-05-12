@@ -15,52 +15,43 @@ namespace freeRSS.ViewModels
 {
     public class MainViewModel : BindableBase
     {
+        // public FeedViewModel StarredFeed { get; private set; }
+        // public FeedViewModel CurrentFeed { get; private set; }
+        // Collection of Rss feeds
+        public ObservableCollection<FeedViewModel> Feeds { get; set; }
+
         // 初始化一个新的MainViewModel
         public MainViewModel()
         {
-            Feeds = new ObservableCollection<FeedViewModel>();
+            this.Feeds = new ObservableCollection<FeedViewModel>();
 
+            this.Feeds.CollectionChanged += (s, e) =>
+            {
+                //OnPropertyChanged(nameof(FeedsWithFavorites));
+                //OnPropertyChanged(nameof(HasNoFeeds));
+
+                 // Save the Feeds collection here only for additions, not including
+                // the bulks additions that occur during initialization. This approach
+                // is necessary to handle list reorderings in the Edit Feeds view. Each 
+                // position change results in a Remove action followed by an Add action, 
+                // so removal is ignored here. For removals that don't involve reordering,
+                // SaveFeedsAsync is called by the methods that handle the removals. 
+                //if (suppressSave || e.Action != NotifyCollectionChangedAction.Add) return;
+                //var withoutAwait = SaveFeedsAsync();
+            };
         }
-
+        
         /// <summary>
         /// Populates the Feeds list and initializes the CurrentFeed property. 
         /// </summary>
         public async Task InitializeFeedsAsync()
         {
-            UItest_FeedsList();
-            getIconTest();
-
         }
 
         public async void getIconTest()
         {
             await WebIconDownloadTool.DownLoadIconFrom_WebUri("https://blogs.msdn.microsoft.com/", "111");
         }
-
-        public void UItest_FeedsList()
-        {
-            for (int i = 0; i < 10; ++i)
-            {
-                var feed = new FeedViewModel();
-                feed.Name = "test fedd " + i;
-                feed.UnreadNum = i + 10;
-                feed.ShortcutIconSourceName = "";
-
-                for (int j = 0; j < 5; j++)
-                {
-                    var article = new Models.ArticleModel();
-                    article.Title = "126 test article " + j;
-                    article.Description = "126 mail" + j;
-                    article.Link = new Uri("http://www.126.com");
-                    feed.Articles.Add(article);
-                }
-
-                Feeds.Add(feed);
-            }
-        }
-
-        // Collection of Rss feeds
-        public ObservableCollection<FeedViewModel> Feeds { get; }
 
         /// <summary>
         /// Gets or sets the feed that the user is currently interacting with.
@@ -105,6 +96,5 @@ namespace freeRSS.ViewModels
         /// Gets the current article as an instance of type Object. 
         /// </summary>
         public object CurrentArticleAsObject => CurrentArticle as object;
-
     }
 }
