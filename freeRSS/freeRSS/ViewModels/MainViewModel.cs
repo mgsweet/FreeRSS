@@ -28,13 +28,13 @@ namespace freeRSS.ViewModels
         public async Task InitializeFeedsAsync()
         {
             UItest_FeedsList();
-            //getIconTest();
+            getIconTest();
 
         }
 
         public async void getIconTest()
         {
-            await WebIconDownloadTool.DownLoadIconFrom_WebUri("http://www.cnblogs.com/", "111");
+            await WebIconDownloadTool.DownLoadIconFrom_WebUri("https://blogs.msdn.microsoft.com/", "111");
         }
 
         public void UItest_FeedsList()

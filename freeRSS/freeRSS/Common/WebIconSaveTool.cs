@@ -36,24 +36,7 @@ namespace freeRSS.Common
                         byte[] data = readBytestTask.Result;
                         using (FileStream fs = new FileStream(filePath, FileMode.Create))
                         {
-                            fs.Write(data, 0, data.Length);
-
-                            /*
-                            try
-                            {
-                                BinaryReader reader = new BinaryReader(fs);
-                                string fileClass;
-                                byte buffer;
-                                buffer = reader.ReadByte();
-                                fileClass = buffer.ToString();
-                                buffer = reader.ReadByte();
-                                fileClass += buffer.ToString();
-                                reader.Dispose();
-                            }
-                            */
-
-                            //清空缓冲区
-                            fs.Flush();
+                            fs.Write(data, 0, data.Length);   
                             //防止文件被独占的。
                             fs.Dispose();
                         }
@@ -63,6 +46,42 @@ namespace freeRSS.Common
             catch (Exception e)
             {
                 Debug.WriteLine("发生异常： {0}", e.Message);
+            }
+        }
+
+        /// <summary>
+        /// 判断是不是图片文件
+        /// </summary>
+        private static bool IsPicture(string filePath)
+        {
+            try
+            {
+                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    BinaryReader reader = new BinaryReader(fs);
+                    string fileClass;
+                    byte buffer;
+                    buffer = reader.ReadByte();
+                    fileClass = buffer.ToString();
+                    buffer = reader.ReadByte();
+                    fileClass += buffer.ToString();
+                    reader.Dispose();
+                    fs.Dispose();
+                    if (fileClass == "255216" || fileClass == "7173" || fileClass == "13780" || fileClass == "6677")
+
+                    //255216是jpg;7173是gif;6677是BMP,13780是PNG;7790是exe,8297是rar 
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -77,11 +96,15 @@ namespace freeRSS.Common
             {
                 // 格式1
                 await DownLoadIconFrom_IconUri(IconUri, IconName);
+                // 格式2
+                if(!IsPicture(ApplicationData.Current.LocalFolder.Path + "\\" + IconName + ".png")) {
+                    Debug.WriteLine("格式一获取失败");
+                    await getIconByFurtherSearch(Uri, IconName);
+                }
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
-                await getIconByFurtherSearch(Uri, IconName);
             }
         }
 
