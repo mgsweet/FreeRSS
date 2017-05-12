@@ -38,6 +38,7 @@ namespace freeRSS.Common
                         {
                             fs.Write(data, 0, data.Length);
 
+                            /*
                             try
                             {
                                 BinaryReader reader = new BinaryReader(fs);
@@ -49,6 +50,7 @@ namespace freeRSS.Common
                                 fileClass += buffer.ToString();
                                 reader.Dispose();
                             }
+                            */
 
                             //清空缓冲区
                             fs.Flush();
