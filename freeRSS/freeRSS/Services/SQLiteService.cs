@@ -25,37 +25,6 @@ namespace freeRSS.Services
             await _db.CreateTableAsync<FeedInfo>();
             await _db.CreateTableAsync<ArticleInfo>();
 
-            // 构建两个临时的实例来测试数据库的插入
-            //var temp = new ArticleInfo()
-            //{
-            //    FeedId = "aaa",
-            //    Title = "bbb",
-            //    PubDate = "ccc",
-            //    Source = "ddd",
-            //    Description = "eee",
-            //    Unread = true,
-            //    Isstarred = false
-            //};
-
-            //var temp2 = new ArticleInfo()
-            //{
-            //    FeedId = "222",
-            //    Title = "bbb",
-            //    PubDate = "ccc",
-            //    Source = "ddd",
-            //    Description = "eee",
-            //    Unread = true,
-            //    Isstarred = false
-            //};
-
-            //List<ArticleInfo> a = new List<ArticleInfo>();
-            //a.Clear();
-            //a.Add(temp2);
-            //a.Add(temp);
-
-            // 这两个都可以自动增加的，美滋滋
-            //var withoutWait = await _db.InsertAllAsync(a);
-
             Debug.WriteLine("Database Async Load successfully!");
         }
 
@@ -64,12 +33,12 @@ namespace freeRSS.Services
         {
             if (Tag == "Unread")
             {
-                var query = _db.Table<ArticleInfo>().Where(v => v.Unread.Equals(true));
+                var query = _db.Table<ArticleInfo>().Where(v => v.Unread.Equals(true)).OrderBy(v => v.Id);
                 return await query.ToListAsync();
             }
             else if (Tag == "Isstarred")
             {
-                var query = _db.Table<ArticleInfo>().Where(v => v.Isstarred.Equals(true));
+                var query = _db.Table<ArticleInfo>().Where(v => v.Isstarred.Equals(true)).OrderBy(v => v.Id);
                 return await query.ToListAsync();
             }
             else
@@ -79,12 +48,23 @@ namespace freeRSS.Services
             }
         }
 
-        public async static Task<List<ArticleInfo>> QueryAritclesOfOneFeed(string LinkString)
+
+        // 这个函数其实应该可能可以舍掉了
+        public async static Task<List<ArticleInfo>> QueryAritclesByFeedSource(string LinkString)
         {
             var feedsQuery = _db.Table<FeedInfo>().Where(v => v.Source.Equals(LinkString));
             var feed = await feedsQuery.FirstOrDefaultAsync();
 
             var articlesQuery = _db.Table<ArticleInfo>().Where(v => v.FeedId.Equals(feed.Id));
+            return await articlesQuery.ToListAsync();
+        }
+
+        /// <summary>
+        /// Try to get the old articles of a feedId in the database
+        /// </summary>
+        public async static Task<List<ArticleInfo>> QueryAritclesByFeedIdAsync(int feedId)
+        {
+            var articlesQuery = _db.Table<ArticleInfo>().Where(v => v.FeedId.Equals(feedId)).OrderBy(v => v.Id);
             return await articlesQuery.ToListAsync();
         }
 
@@ -124,6 +104,35 @@ namespace freeRSS.Services
         }
 
         // Insert Method
-        //public async static Task InsertAFeed()
+        public static async Task SaveFeedsInfoAsync(IEnumerable<FeedInfo> feeds)
+        {
+            foreach (var item in feeds)
+            {
+                await _db.InsertOrReplaceAsync(item);
+            }
+        }
+
+        public static async Task SaveArticlesInfoAsync(IEnumerable<ArticleInfo> articles)
+        {
+            await _db.UpdateAllAsync(articles);
+        }
+
+        /// <summary>
+        /// 如果f存在，则返回它的id；如果f不存在，则插入并返回它的插入后的id
+        /// </summary>
+        public static async Task<int> InsertOrReplaceFeedAsync(FeedInfo f)
+        {
+            await _db.InsertOrReplaceAsync(f);
+            return (int)f.Id;
+        }
+
+        /// <summary>
+        /// 如果a存在，则返回它的id；如果a不存在，则插入并返回它的插入后的id
+        /// </summary>
+        public static async Task<int> InsertOrReplaceArticleAsync(ArticleInfo a)
+        {
+            await _db.InsertOrReplaceAsync(a);
+            return (int)a.Id;
+        }
     }
 }
