@@ -48,6 +48,8 @@ namespace freeRSS.ViewModels
         {
             StarredFeed = await FeedDataSource.GetStarredFeedAsync();
 
+            var a = StarredFeed.Articles.Count;
+
             var res = await FeedDataSource.GetFeedsAsync();
             foreach (var feed in res)
             {

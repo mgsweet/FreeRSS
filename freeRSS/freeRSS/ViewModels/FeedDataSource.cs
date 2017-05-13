@@ -118,7 +118,7 @@ namespace freeRSS.ViewModels
                     feedViewModel.Description = feed.Subtitle?.Text ?? feed.Title.Text;
                     feedViewModel.IconSrc = feed.IconUri??new Uri(DEFAULT_HEAD_PATH);
                     feedViewModel.LastBuildedTime = feed.LastUpdatedTime.ToString();
-                    feedViewModel.Id = SQLiteService.InsertOrReplaceFeed(feedViewModel.AbstractInfo());
+                    feedViewModel.Id = await SQLiteService.InsertOrReplaceFeedAsync(feedViewModel.AbstractInfo());
                     isHaveNew = true;
                 }
 
@@ -128,12 +128,13 @@ namespace freeRSS.ViewModels
                     isHaveNew = true;
                 }
 
-                if (!isHaveNew)
+                if (isHaveNew)
                 {
+                    var articleInfoList = new List<ArticleInfo>();
                     // Get Article from the newly getted feed And sync
                     foreach (var item in feed.Items)
                     {
-                        feedViewModel.Articles.Insert(0, new ArticleModel(new ArticleInfo()
+                        var newArticle = new ArticleModel(new ArticleInfo()
                         {
                             FeedId = (int)feedViewModel.Id,
                             Title = item.Title.Text,
@@ -143,8 +144,13 @@ namespace freeRSS.ViewModels
                             Description = item.Summary == null ? "The article doesn't have description!" : item.Summary.Text,
                             Unread = true,
                             Isstarred = false
-                        }));
+                        });
+
+                        newArticle.Id = await SQLiteService.InsertOrReplaceArticleAsync(newArticle.AbstractInfo());
+
+                        feedViewModel.Articles.Insert(0, newArticle);
                     }
+
                 } else
                 {
                     Debug.Write("The feed is already the newest.");

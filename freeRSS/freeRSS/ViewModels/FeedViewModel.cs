@@ -273,8 +273,8 @@ namespace freeRSS.ViewModels
             }
         }
 
-        private bool _isInEdit;
-        public bool IsInEdit { get { return _isInEdit; } set { SetProperty(ref _isInEdit, value); } }
+        //private bool _isInEdit;
+        //public bool IsInEdit { get { return _isInEdit; } set { SetProperty(ref _isInEdit, value); } }
 
         private bool _isInError;
         public bool IsInError
@@ -284,7 +284,7 @@ namespace freeRSS.ViewModels
             {
                 if (SetProperty(ref _isInError, value))
                 {
-                    OnPropertyChanged(nameof(IsNotFavouritesOrInError));
+                    //OnPropertyChanged(nameof(IsNotFavouritesOrInError));
                 }
             } 
         }
@@ -292,23 +292,23 @@ namespace freeRSS.ViewModels
         private string _errorMessage;
         public string ErrorMessage
         {
-            get { return ErrorMessage; }
+            get { return _errorMessage; }
             set { SetProperty(ref _errorMessage, value);}
         }
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object. 
         /// </summary>
-        public override bool Equals(object obj) =>
-            obj is FeedViewModel ? (obj as FeedViewModel).GetHashCode() == GetHashCode() : false;
+        //public override bool Equals(object obj) =>
+        //    obj is FeedViewModel ? (obj as FeedViewModel).GetHashCode() == GetHashCode() : false;
 
-        /// <summary>
-        /// Returns the hash code of the FeedViewModel, which is based on 
-        /// a string representation the Link value, using only the host and path.  
-        /// 即系通过link来进行一次哈希就可以拿到一个唯一标识的hash_id
-        /// </summary>
-        public override int GetHashCode() =>
-            Source?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
+        ///// <summary>
+        ///// Returns the hash code of the FeedViewModel, which is based on 
+        ///// a string representation the Link value, using only the host and path.  
+        ///// 即系通过link来进行一次哈希就可以拿到一个唯一标识的hash_id
+        ///// </summary>
+        //public override int GetHashCode() =>
+        //    Source?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
 
 
         private const string NOT_HTTP_MESSAGE = "Sorry. The URL must begin with http:// or https://";

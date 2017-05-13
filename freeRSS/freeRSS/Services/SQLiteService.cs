@@ -114,23 +114,25 @@ namespace freeRSS.Services
 
         public static async Task SaveArticlesInfoAsync(IEnumerable<ArticleInfo> articles)
         {
-            foreach (var item in articles)
-            {
-                await _db.InsertOrReplaceAsync(item);
-            }
+            await _db.UpdateAllAsync(articles);
         }
 
         /// <summary>
         /// 如果f存在，则返回它的id；如果f不存在，则插入并返回它的插入后的id
-        /// 同步方法
-        /// 听说异步方法有bug。。。只能改同步work先
         /// </summary>
-        public static int InsertOrReplaceFeed(FeedInfo f)
+        public static async Task<int> InsertOrReplaceFeedAsync(FeedInfo f)
         {
-            var conn = new SQLiteConnection("Storage.db");
-            conn.Insert(f);
-            conn.Close();
+            await _db.InsertOrReplaceAsync(f);
             return (int)f.Id;
+        }
+
+        /// <summary>
+        /// 如果a存在，则返回它的id；如果a不存在，则插入并返回它的插入后的id
+        /// </summary>
+        public static async Task<int> InsertOrReplaceArticleAsync(ArticleInfo a)
+        {
+            await _db.InsertOrReplaceAsync(a);
+            return (int)a.Id;
         }
     }
 }
