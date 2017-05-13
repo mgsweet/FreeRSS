@@ -20,8 +20,8 @@ namespace freeRSS.ViewModels
     {
         // 这个类里面可以涉及到数据库的用户可从界面修改的属性应该只有Name和Description而已
 
-        private int _id;
-        public int Id { get; private set; }
+        private int? _id;
+        public int? Id { get; set; }
 
         // 从get到的xml里面拿默认设置，用户可以自定义
         private string _name;
@@ -95,7 +95,7 @@ namespace freeRSS.ViewModels
             Description = "There are all my favourite articles.";
             Source = null;
             IconSrc = null;
-            LastBuildedTime = DateTime.Now.ToString();
+            LastBuildedTime = DateTimeOffset.Now.ToString();
 
             Articles = new ObservableCollection<ArticleModel>();
 
@@ -106,12 +106,13 @@ namespace freeRSS.ViewModels
         public FeedViewModel (FeedInfo f)
         {
             // 通过给进来的FeedInfo来设置各种与数据库相关的属性的值
+            // 只要这里的Id是空的话，那么就可以表明这个是一个数据库中没有的feed了
             Id = f.Id;
             Name = f.Name;
             // 可能这里的source会有两次重复设置，注意一下避免冗余
             Source = new Uri(f.Source);
             SourceAsString = f.Source;
-            IconSrc = new Uri(f.IconSrc);
+            IconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
             LastBuildedTime = f.LastBuildedTime;
             Description = f.Description;
 
@@ -132,7 +133,6 @@ namespace freeRSS.ViewModels
                 Description = this.Description
             };
         }
-
 
         // 类中的相关属性
         public string SourceAsString
@@ -273,8 +273,8 @@ namespace freeRSS.ViewModels
             }
         }
 
-        private bool _isInEdit;
-        public bool IsInEdit { get { return _isInEdit; } set { SetProperty(ref _isInEdit, value); } }
+        //private bool _isInEdit;
+        //public bool IsInEdit { get { return _isInEdit; } set { SetProperty(ref _isInEdit, value); } }
 
         private bool _isInError;
         public bool IsInError
@@ -284,7 +284,7 @@ namespace freeRSS.ViewModels
             {
                 if (SetProperty(ref _isInError, value))
                 {
-                    OnPropertyChanged(nameof(IsNotFavouritesOrInError));
+                    //OnPropertyChanged(nameof(IsNotFavouritesOrInError));
                 }
             } 
         }
@@ -292,23 +292,23 @@ namespace freeRSS.ViewModels
         private string _errorMessage;
         public string ErrorMessage
         {
-            get { return ErrorMessage; }
+            get { return _errorMessage; }
             set { SetProperty(ref _errorMessage, value);}
         }
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object. 
         /// </summary>
-        public override bool Equals(object obj) =>
-            obj is FeedViewModel ? (obj as FeedViewModel).GetHashCode() == GetHashCode() : false;
+        //public override bool Equals(object obj) =>
+        //    obj is FeedViewModel ? (obj as FeedViewModel).GetHashCode() == GetHashCode() : false;
 
-        /// <summary>
-        /// Returns the hash code of the FeedViewModel, which is based on 
-        /// a string representation the Link value, using only the host and path.  
-        /// 即系通过link来进行一次哈希就可以拿到一个唯一标识的hash_id
-        /// </summary>
-        public override int GetHashCode() =>
-            Source?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
+        ///// <summary>
+        ///// Returns the hash code of the FeedViewModel, which is based on 
+        ///// a string representation the Link value, using only the host and path.  
+        ///// 即系通过link来进行一次哈希就可以拿到一个唯一标识的hash_id
+        ///// </summary>
+        //public override int GetHashCode() =>
+        //    Source?.GetComponents(UriComponents.Host | UriComponents.Path, UriFormat.Unescaped).GetHashCode() ?? 0;
 
 
         private const string NOT_HTTP_MESSAGE = "Sorry. The URL must begin with http:// or https://";

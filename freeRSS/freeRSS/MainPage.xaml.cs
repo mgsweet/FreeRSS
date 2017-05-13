@@ -24,16 +24,21 @@ namespace freeRSS
     
     public sealed partial class MainPage : Page
     {
+        public static MainPage Current = null;
 
         public MainViewModel ViewModel { get; } = new MainViewModel();
 
         public MainPage()
         {
             this.InitializeComponent();
+            Current = this;
 
             // get view model
-            this.Loaded += (sender, args) =>
+            this.Loaded += async (sender, args) =>
             {
+                //viewModel 初始化
+                await ViewModel.InitializeFeedsAsync();
+
                 //自适应监控窗口变化
                 this.SizeChanged += MainPage_SizeChanged;
 

@@ -11,6 +11,8 @@ namespace freeRSS.Models
 {
     public class ArticleModel : BindableBase
     {
+        public int? Id { get; set; }
+
         public string Title { get; set; }
 
         public int FeedId { get; set; }
@@ -42,6 +44,7 @@ namespace freeRSS.Models
         // Construction From ArticleInfo
         public ArticleModel(ArticleInfo a)
         {
+            Id = a.Id;
             Title = a.Title;
             FeedId = a.FeedId;
             Description = a.Description;
@@ -56,6 +59,7 @@ namespace freeRSS.Models
         {
             return new ArticleInfo()
             {
+                Id = this.Id,
                 FeedId = this.FeedId,
                 Title = this.Title,
                 PubDate = this.PubDate,
