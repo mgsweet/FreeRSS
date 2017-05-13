@@ -30,7 +30,12 @@ namespace freeRSS
 
         public MainPage()
         {
+            //设置顶部UI
+            setTitleUI();
+
             this.InitializeComponent();
+            //自适应监控窗口变化
+            this.SizeChanged += MainPage_SizeChanged;
             Current = this;
 
             // get view model
@@ -38,12 +43,6 @@ namespace freeRSS
             {
                 //viewModel 初始化
                 await ViewModel.InitializeFeedsAsync();
-
-                //自适应监控窗口变化
-                this.SizeChanged += MainPage_SizeChanged;
-
-                //设置顶部UI
-                setTitleUI();
             };
         }
 

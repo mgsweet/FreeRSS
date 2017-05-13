@@ -184,7 +184,7 @@ namespace freeRSS.ViewModels
         }
 
         // 8. shortcutIconSource
-        private string _shortcutIconSourceName;
+        private string _shortcutIconSourceName = "ms-appx:///Assets/default/FeedHead.png";
         public string ShortcutIconSourceName
         {
             set
@@ -233,6 +233,8 @@ namespace freeRSS.ViewModels
                 this._shortcutIcon = bitmapImage;
             }
         }
+
+
 
         /// <summary>
         /// Gets the articles collection as an instance of type Object.
