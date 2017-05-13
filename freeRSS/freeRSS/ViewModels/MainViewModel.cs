@@ -16,7 +16,47 @@ namespace freeRSS.ViewModels
     public class MainViewModel : BindableBase
     {
         public FeedViewModel StarredFeed { get; private set; }
-        public FeedViewModel CurrentFeed { get; set; }
+        public FeedViewModel CurrentFeed
+        {
+            get { return _currentFeed; }
+            set
+            {
+                if (SetProperty(ref _currentFeed, value))
+                {
+                    if (_currentFeed.Articles.Count > 0)
+                    {
+                        CurrentArticle = _currentFeed.Articles.First();
+                    }
+                }
+            }
+        }
+        private FeedViewModel _currentFeed;
+
+
+        public ArticleModel CurrentArticle
+        {
+            get { return _currentArticle; }
+            set
+            {
+                // CurrentArticle is a special case, so it doesn't use SetProperty 
+                // to update the backing field, raising the PropertyChanged event
+                // only when the field value changes. Instead, CurrentArticle raises
+                // PropertyChanged every time the setter is called. This ensures
+                // that the ListView selection is updated when changing feeds, even 
+                // if the first article is the same in both feeds. It also ensures
+                // that clicking an article in the narrow view will always navigate
+                // to the details view, even if the article is already the current one.
+                _currentArticle = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrentArticleAsObject));
+            }
+        }
+        private ArticleModel _currentArticle;
+        /// <summary>
+        /// Gets the current article as an instance of type Object. 
+        /// </summary>
+        public object CurrentArticleAsObject => CurrentArticle as object;
+
         // Collection of Rss feeds
         public ObservableCollection<FeedViewModel> Feeds { get; set; }
 
