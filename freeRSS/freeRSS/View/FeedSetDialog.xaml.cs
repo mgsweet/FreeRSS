@@ -3,6 +3,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
+using freeRSS.ViewModels;
+using freeRSS.Schema;
 
 namespace freeRSS.View
 {
@@ -31,7 +33,7 @@ namespace freeRSS.View
             this.Result = FeedGetResult.Nothing;
         }
 
-        private void Search_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void Search_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             // Ensure the Feed or Site URL fields isn't empty. If a required field
             // is empty, set args.Cancel = true to keep the dialog open.
@@ -39,8 +41,33 @@ namespace freeRSS.View
             {
                 args.Cancel = true;
                 errorTextBlock.Text = "Feed or Site URL is required.";
+                return;
             }
-            return;
+
+            try
+            {
+                Uri check_uri = new Uri(this.feedTextBox.Text);
+            }
+            catch (UriFormatException)
+            {
+                args.Cancel = true;
+                errorTextBlock.Text = "It's not a uri format";
+                return;
+            }
+
+            var newfeed = new FeedViewModel(new FeedInfo {
+                Source = this.feedTextBox.Text,
+            });
+            await newfeed.RefreshAsync();
+
+            if (newfeed.ErrorMessage == null)
+            {
+                MainPage.Current.ViewModel.Feeds.Add(newfeed);
+            } else
+            {
+                args.Cancel = true;
+                errorTextBlock.Text = newfeed.ErrorMessage;
+            }
         }
 
         private void Cancel_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

@@ -5,7 +5,7 @@ namespace freeRSS.Schema
     public class FeedInfo
     {
         [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [MaxLength(40), NotNull]
         public string Name { get; set; }
