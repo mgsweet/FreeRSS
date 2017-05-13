@@ -10,6 +10,8 @@ using Windows.System;
 using System.Linq;
 using Windows.ApplicationModel.UserDataAccounts;
 using freeRSS.ViewModels;
+using System.ComponentModel;
+using System.Threading.Tasks;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -30,12 +32,8 @@ namespace freeRSS
             this.InitializeComponent();
 
             // get view model
-            this.Loaded += async (sender, args) =>
+            this.Loaded += (sender, args) =>
             {
-
-                //viewModel 初始化
-                ViewModel.InitializeFeedsAsync();
-
                 //自适应监控窗口变化
                 this.SizeChanged += MainPage_SizeChanged;
 

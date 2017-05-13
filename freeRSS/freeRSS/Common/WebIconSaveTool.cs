@@ -10,11 +10,63 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace freeRSS.Common
 {
-    // 大多数网站直接不明确写明icon,但可通过在url上加上"/favicon.ico"访问获取
-    // 格式1：<link rel="shortcut icon" href="https://static.zhihu.com/static/favicon.ico" type="image/x-icon">
-    // 格式2：<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    // 格式1：<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    // 格式2：大多数网站直接不明确写明icon,但可通过在url上加上"/favicon.ico"访问获取
+
     public static class WebIconDownloadTool
     {
+        /// <summary>
+        /// 下载给定URI网址对应的icon, 例入传入"http://www.126.com/"
+        /// </summary>
+        public static async Task DownLoadIconFrom_WebUri(string Uri, string IconName)
+        {
+            // 大多数网站直接不明确写明icon,但可通过在url上加上"/favicon.ico"访问获取
+            try
+            {
+                // 格式1
+                await getIconByHtmlSearch(Uri, IconName);
+                if (IsPicture(ApplicationData.Current.LocalFolder.Path + "\\" + IconName + ".png"))
+                {
+                    //若得到的是图片
+                    Debug.WriteLine("格式一从html文件获取icon成功");
+                }
+                else
+                {
+                    Debug.WriteLine("格式一从html文件获取icon失败");
+                    // 尝试格式2
+                    Uri = getHostFromAnyUri(Uri);
+                    string IconUri = Uri + "favicon.ico";
+                    await DownLoadIconFrom_IconUri(IconUri, IconName);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 传入任意网址，返回尝试其主页
+        /// 例：传入 "http://daily.zhihu.com/story/9418288"，返回 "http://daily.zhihu.com/"， 若正则匹配为空范围空字符串。
+        /// </summary>
+        public static string getHostFromAnyUri(string Uri)
+        {
+            string hostUri = "";
+            string pattern = "[a-zA-Z]+://[^\\s]*?/";
+            // 正则匹配
+            var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var matchStrings = regex.Matches(Uri);
+            if (matchStrings.Count == 0)
+            {
+                Debug.WriteLine("Can not get Host Uri!");
+            } else
+            {
+                hostUri = matchStrings[0].Value;
+            }
+
+            return hostUri;
+        }
+
         /// <summary>
         /// HttpContent异步读取响应流并写入本地文件方法扩展
         /// </summary>
@@ -86,29 +138,6 @@ namespace freeRSS.Common
         }
 
         /// <summary>
-        /// 下载给定URI网址对应的icon, 例入传入"http://www.126.com/"
-        /// </summary>
-        public static async Task DownLoadIconFrom_WebUri(string Uri, string IconName)
-        {
-            // 大多数网站直接不明确写明icon,但可通过在url上加上"/favicon.ico"访问获取
-            string IconUri = Uri + "favicon.ico";
-            try
-            {
-                // 格式1
-                await DownLoadIconFrom_IconUri(IconUri, IconName);
-                // 格式2
-                if(!IsPicture(ApplicationData.Current.LocalFolder.Path + "\\" + IconName + ".png")) {
-                    Debug.WriteLine("格式一获取失败");
-                    await getIconByFurtherSearch(Uri, IconName);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-            }
-        }
-
-        /// <summary>
         /// 直接给出icon的URI网址进行下载
         /// </summary>
         public static async Task DownLoadIconFrom_IconUri(string Icon_Uri, string IconName)
@@ -127,9 +156,7 @@ namespace freeRSS.Common
         /// <summary>
         /// 解决少部分网站没有"/favicon.ico"的问题，通过html内容获取
         /// </summary>
-        /// <param name="Uri"></param>
-        /// <returns></returns>
-        private static async Task getIconByFurtherSearch(string Uri, string IconName)
+        private static async Task getIconByHtmlSearch(string Uri, string IconName)
         {
             try
             {

@@ -203,14 +203,13 @@
                         </ListViewItem>
                     </ListView>
                     <!--FeedsList-->
-                        <SplitView Grid.Row="3">
+                    <SplitView Grid.Row="3">
                         <ListView x:Name="FeedsList"
                                   IsItemClickEnabled="True"
                                   ItemsSource="{x:Bind ViewModel.Feeds, Mode=OneWay}"
                                   ItemTemplate="{StaticResource FeedsListItemTemplate}"
                                   ItemClick="FeedsList_ItemClick">
                         </ListView>
-                        
                     </SplitView>
                     <ListView x:Name="FeedEditListView"
                               Grid.Row="5">
@@ -248,7 +247,7 @@
                     </Grid.ColumnDefinitions>
 
                     <ListView Background="#FF373737"
-                              x:Name="RSS_ArticleListView" Grid.Column="0"
+                              x:Name="RSS_ArticleListView" Grid.Column="0"                  
                               ItemTemplate="{StaticResource RSS_ArticleTemplate}"
                               ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}"/>
 
