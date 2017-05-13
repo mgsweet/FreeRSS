@@ -121,9 +121,11 @@
     <None Include="freeRSS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\default\FeedHead.png" />
     <Content Include="Assets\default\rss.png" />
     <Content Include="Assets\default\unread.png" />
+    <Content Include="Assets\Square310x310Logo.scale-100.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
