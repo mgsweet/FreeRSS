@@ -266,6 +266,7 @@ namespace freeRSS.ViewModels
         {
             a.FeedName = feedViewModel.Name;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
+            a.FeedIconSourceAsString = feedViewModel.IconSrc.AbsolutePath;
         }
 
         public static void UpdateArticlesFeedName(this FeedViewModel feedViewModel)
