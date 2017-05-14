@@ -124,9 +124,9 @@ namespace freeRSS.ViewModels
             // 可能这里的source会有两次重复设置，注意一下避免冗余
             _source = new Uri(f.Source);
             SourceAsString = f.Source;
-            IconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
-            LastBuildedTime = f.LastBuildedTime;
-            Description = f.Description;
+            _iconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
+            _lastBuildedTime = f.LastBuildedTime;
+            _description = f.Description;
 
             Articles = new ObservableCollection<ArticleModel>();
 

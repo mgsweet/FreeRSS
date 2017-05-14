@@ -64,8 +64,8 @@ namespace freeRSS.Models
             Description = a.Description;
             Source = new Uri(a.Source);
             PubDate = a.PubDate;
-            IsStarred = a.Isstarred;
-            UnRead = a.Unread;
+            _isStarred = a.Isstarred;
+            _unread = a.Unread;
         }
 
         // 获得一个关于这个ArticleModel的ArticleInfo实例
