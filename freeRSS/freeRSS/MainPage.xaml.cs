@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using freeRSS.Models;
 using System.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
+using freeRSS.Common;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -168,7 +169,7 @@ namespace freeRSS
         {
             if (ViewModel.CurrentFeed != null)
             {
-                await ViewModel.CurrentFeed.RefreshAsync();
+                await ViewModel.CurrentFeed.RefreshAsync();                           
             }
         }
     }

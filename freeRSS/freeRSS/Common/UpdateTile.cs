@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
 using Windows.UI.Notifications;
 
@@ -17,7 +13,7 @@ namespace freeRSS.Common
             xmlDocument.LoadXml(File.ReadAllText("tile.xml", Encoding.UTF8));
             TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
             //循环次数系要显示噶文章数量，一定要小于等于下边数组噶size
-            for (int j = 0; j < 2; j++)
+            for (int j = 0; j < 5; j++)
             {
                 Models.ArticleModel article = articleArray[j]; /*哩度要将文章传入一个数组再传比article*/
                 XmlNodeList texts = xmlDocument.GetElementsByTagName("text");
@@ -30,7 +26,7 @@ namespace freeRSS.Common
                 texts[6].InnerText = article.Description;
                 texts[8].InnerText = article.PubDate.ToString();
                 texts[9].InnerText = article.Title;
-                texts[10].InnerText = article.Description;
+                texts[10].InnerText = article.Summary;
                 texts[18].InnerText = article.PubDate.ToString();
                 var notification = new TileNotification(xmlDocument);
                 TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
