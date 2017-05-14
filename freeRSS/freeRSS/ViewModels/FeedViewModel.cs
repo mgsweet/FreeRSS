@@ -88,6 +88,7 @@ namespace freeRSS.ViewModels
             {
                 OnPropertyChanged(nameof(IsEmpty));
                 OnPropertyChanged(nameof(IsNotEmpty));
+                OnPropertyChanged(nameof(UnreadNum));
                 //OnPropertyChanged(nameof(IsInErrorAndEmpty));
                 //OnPropertyChanged(nameof(IsInErrorAndNotEmpty));
                 //OnPropertyChanged(nameof(IsLoadingAndNotEmpty));
@@ -212,13 +213,11 @@ namespace freeRSS.ViewModels
 
         // 9. total Unread Num
         // 要考虑下是不是每次触发了unread都去遍历一次article看有多少文章未读，还是直接减一
-        //private int _unreadNum;
-        public int UnreadNum
+        private int? _unreadNum;
+        public int? UnreadNum
         {
-            get
-            {
-                return this.Articles.ToList().Where(x => x.UnRead == true).Count();
-            }
+            get { return _unreadNum??(int?)this.Articles.ToList().Where(x => x.UnRead == true).Count(); }
+            set { SetProperty(ref _unreadNum, value); }
         }
 
         public Array NewestArticles
