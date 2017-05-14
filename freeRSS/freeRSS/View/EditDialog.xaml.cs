@@ -1,5 +1,6 @@
 ﻿using freeRSS.ViewModels;
 using System;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
@@ -40,6 +41,10 @@ namespace freeRSS.View
             {
                 //直接跳出不做更改
                 return;
+            } else
+            {
+                MainPage.Current.ViewModel.CurrentFeed.Name = feedTextBox.Text;
+                MainPage.Current.ViewModel.CurrentFeed.UpdateArticlesFeedName();
             }
         }
 
@@ -54,17 +59,27 @@ namespace freeRSS.View
         /// <summary>
         /// 删除文章
         /// </summary>
-        private void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-
+            await MainPage.Current.ViewModel.CurrentFeed.ClearOutTimeArticlesAsync();
         }
 
         /// <summary>
         /// 删除Feed
         /// </summary>
-        private void DeleteFeedButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void DeleteFeedButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            // 删除
+            await MainPage.Current.ViewModel.CurrentFeed.RemoveRelatedArticlesAsync();
+            await MainPage.Current.ViewModel.CurrentFeed.RemoveAFeedAsync();
+            MainPage.Current.ViewModel.Feeds.Remove(MainPage.Current.ViewModel.CurrentFeed);
 
+            // 重新初始化CurrentFeed 和 CurrentArticle
+            MainPage.Current.ViewModel.CurrentFeed = MainPage.Current.ViewModel.Feeds.Count == 0 ?
+                MainPage.Current.ViewModel.StarredFeed :
+                MainPage.Current.ViewModel.Feeds[0];
+
+            MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
         }
     }
 }

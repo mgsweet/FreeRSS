@@ -39,14 +39,20 @@ namespace freeRSS.Models
         public bool IsStarred
         {
             get { return _isStarred; }
-            set { SetProperty(ref _isStarred, value); }
+            set {
+                SetProperty(ref _isStarred, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         private bool _unread = true;
         public bool UnRead
         {
             get { return _unread; }
-            set { SetProperty(ref _unread, value); }
+            set {
+                SetProperty(ref _unread, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         // Construction From ArticleInfo

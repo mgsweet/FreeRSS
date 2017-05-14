@@ -195,5 +195,13 @@ namespace freeRSS
             //需要一个默认的CurrrentArticle
             RSS_ArticleListView.SelectedItem = null;
         }
+
+        private async void buttonSync_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CurrentFeed != null)
+            {
+                await ViewModel.CurrentFeed.RefreshAsync();
+            }
+        }
     }
 }

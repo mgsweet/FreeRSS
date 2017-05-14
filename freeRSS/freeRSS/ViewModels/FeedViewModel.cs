@@ -19,16 +19,22 @@ namespace freeRSS.ViewModels
     public class FeedViewModel : BindableBase
     {
         // 这个类里面可以涉及到数据库的用户可从界面修改的属性应该只有Name和Description而已
-
         private int? _id;
-        public int? Id { get; set; }
+        public int? Id
+        {
+            get { return _id; }
+            set { SetProperty(ref _id, value); }
+        }
 
         // 从get到的xml里面拿默认设置，用户可以自定义
         private string _name;
         public string Name
         {
             get { return _name; }
-            set { SetProperty(ref _name, value); }
+            set {
+                SetProperty(ref _name, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         private Uri _source;
@@ -55,7 +61,10 @@ namespace freeRSS.ViewModels
         public string LastBuildedTime
         {
             get { return _lastBuildedTime; }
-            set { SetProperty(ref _lastBuildedTime, value); }
+            set {
+                SetProperty(ref _lastBuildedTime, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         // 从get到的xml里面拿默认设置，用户可以自定义
@@ -63,11 +72,14 @@ namespace freeRSS.ViewModels
         public string Description
         {
             get { return _description; }
-            set { SetProperty(ref _description, value); }
+            set {
+                SetProperty(ref _description, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         // 存放属于这个Feed的最新的Articles
-        public ObservableCollection<ArticleModel> Articles { get; }
+        public ObservableCollection<ArticleModel> Articles { get; set; }
 
         private void SetListeningPropertyChanged()
         {
@@ -90,12 +102,12 @@ namespace freeRSS.ViewModels
             // 实际上把它作为了StarredFeedViewModel来构建
             // StarredFeedViewModel的id就用数据库里面不可能出现的0吧，如果加上unread栏的话，unread栏的Id使用-1
             // 诶这样子其实可以通过id是否大于0来判断是不是普通的FeedviewModel，美滋滋
-            Id = 0;
-            Name = "My Favourites";
-            Description = "There are all my favourite articles.";
-            Source = null;
-            IconSrc = null;
-            LastBuildedTime = DateTimeOffset.Now.ToString();
+            _id = 0;
+            _name = "My Favourites";
+            _description = "There are all my favourite articles.";
+            _source = null;
+            _iconSrc = null;
+            _lastBuildedTime = DateTimeOffset.Now.ToString();
 
             Articles = new ObservableCollection<ArticleModel>();
 
@@ -107,10 +119,10 @@ namespace freeRSS.ViewModels
         {
             // 通过给进来的FeedInfo来设置各种与数据库相关的属性的值
             // 只要这里的Id是空的话，那么就可以表明这个是一个数据库中没有的feed了
-            Id = f.Id;
-            Name = f.Name;
+            _id = f.Id;
+            _name = f.Name;
             // 可能这里的source会有两次重复设置，注意一下避免冗余
-            Source = new Uri(f.Source);
+            _source = new Uri(f.Source);
             SourceAsString = f.Source;
             IconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
             LastBuildedTime = f.LastBuildedTime;
