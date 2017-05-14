@@ -218,9 +218,6 @@ namespace freeRSS.ViewModels
             var temp = feedViewModel.Articles.ToList();
             temp.RemoveAll(x => x.UnRead == false && x.IsStarred == false);
             feedViewModel.Articles = new System.Collections.ObjectModel.ObservableCollection<ArticleModel>(temp);
-
-            //feedViewModel.Articles.Remove();
-            var c = new List<ArticleModel>();
             
             var ClearArticles = from x in original
                                 where x.UnRead == false && x.IsStarred == false
