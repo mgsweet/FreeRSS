@@ -26,6 +26,15 @@ namespace freeRSS
     
     public sealed partial class MainPage : Page
     {
+        //// 固定值
+        //private const double MinWindowSnapPoint = 320;
+        //private const double MediumWindowSnapPoint = 720;
+        //private const double LargeWindowSnapPoint = 1024;
+        //private GridLength zeroGridLength = new GridLength(0);
+        //private GridLength oneStarGridLength = new GridLength(1, GridUnitType.Star);
+        //private GridLength LeftBarLength = new GridLength(250);
+
+
         public static MainPage Current = null;
 
         public MainViewModel ViewModel { get; } = new MainViewModel();
@@ -42,10 +51,25 @@ namespace freeRSS
 
             
             this.InitializeComponent();
-            //自适应监控窗口变化
             //设置顶部UI
-            this.SizeChanged += MainPage_SizeChanged;
             setTitleUI();
+            setWebView();
+            //自适应监控窗口变化
+            //this.SizeChanged += MainPage_SizeChanged;
+
+        }
+
+        private void setWebView()
+        {
+            ArticleWebView.ContentLoading += (s, e) =>
+             {
+                 LoadingProgressBar.Visibility = Visibility.Visible;
+             };
+            ArticleWebView.LoadCompleted += (s, e) =>
+            {
+                ArticleWebView.Visibility = Visibility.Visible;
+                LoadingProgressBar.Visibility = Visibility.Collapsed;
+            };
         }
 
         /// <summary>
@@ -53,6 +77,9 @@ namespace freeRSS
         /// </summary>
         private void setTitleUI()
         {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
             Window.Current.SetTitleBar(GridTitleBar); 
             var view = ApplicationView.GetForCurrentView();
             view.TitleBar.BackgroundColor = Color.FromArgb(255, 37, 37, 37);
@@ -80,66 +107,58 @@ namespace freeRSS
         /// <summary>
         /// 监控页面大小变化，做自适应改变
         /// </summary>
-        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdateLayout(e.NewSize.Width);
-        }
+        //private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
+        //{
+        //    UpdateLayout(e.NewSize.Width);
+        //}
 
-        /// <summary>
-        /// 更强大的自适应控制
-        /// </summary>
-        private void UpdateLayout(double newWidth)
-        {
-            // 固定值
-            const double MinWindowSnapPoint = 320;
-            const double MediumWindowSnapPoint = 720;
-            const double LargeWindowSnapPoint = 1024;
-            GridLength zeroGridLength = new GridLength(0);
-            GridLength oneStarGridLength = new GridLength(1, GridUnitType.Star);
-            GridLength LeftBarLength = new GridLength(250);
+        ///// <summary>
+        ///// 更强大的自适应控制
+        ///// </summary>
+        //private void UpdateLayout(double newWidth)
+        //{
+        //    if (newWidth >= MinWindowSnapPoint && newWidth < MediumWindowSnapPoint)
+        //    {
+        //        var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+        //        coreTitleBar.ExtendViewIntoTitleBar = false;
 
-            if (newWidth >= MinWindowSnapPoint && newWidth < MediumWindowSnapPoint)
-            {
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = false;
-
-                this.RootSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
-                if (RSS_ArticleListView.SelectedItem == null)
-                {
-                    columnRight.Width = zeroGridLength;
-                    columnLeft.Width = oneStarGridLength;
-                    columnRightBar.Width = zeroGridLength;
-                    columnLeftBar.Width = oneStarGridLength;
-                }
-                else
-                {
-                    columnLeft.Width = zeroGridLength;
-                    columnRight.Width = oneStarGridLength;
-                    columnLeftBar.Width = zeroGridLength;
-                    columnRightBar.Width = oneStarGridLength;
-                }
-            }
-            else
-            {
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = true;
-                columnLeft.Width = LeftBarLength;
-                columnRight.Width = oneStarGridLength;
-                columnLeftBar.Width = LeftBarLength;
-                columnRightBar.Width = oneStarGridLength;
-                if (newWidth >= LargeWindowSnapPoint)
-                {
-                    this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
-                    this.RootSplitView.IsPaneOpen = true;
-                }
-                else
-                {
-                    this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
-                    this.RootSplitView.IsPaneOpen = false;
-                }
-            }
+        //        this.RootSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
+        //        if (RSS_ArticleListView.SelectedItem == null)
+        //        {
+        //            columnRight.Width = zeroGridLength;
+        //            columnLeft.Width = oneStarGridLength;
+        //            columnRightBar.Width = zeroGridLength;
+        //            columnLeftBar.Width = oneStarGridLength;
+        //        }
+        //        else
+        //        {
+        //            columnLeft.Width = zeroGridLength;
+        //            columnRight.Width = oneStarGridLength;
+        //            columnLeftBar.Width = zeroGridLength;
+        //            columnRightBar.Width = oneStarGridLength;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+        //        coreTitleBar.ExtendViewIntoTitleBar = true;
+        //        columnLeft.Width = LeftBarLength;
+        //        columnRight.Width = oneStarGridLength;
+        //        columnLeftBar.Width = LeftBarLength;
+        //        columnRightBar.Width = oneStarGridLength;
+        //        if (newWidth >= LargeWindowSnapPoint)
+        //        {
+        //            this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
+        //            this.RootSplitView.IsPaneOpen = true;
+        //        }
+        //        else
+        //        {
+        //            this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
+        //            this.RootSplitView.IsPaneOpen = false;
+        //        }
+        //    }
             
-        }
+        //}
 
 
         /// <summary>
@@ -185,7 +204,8 @@ namespace freeRSS
         {
             if (RSS_ArticleListView.SelectedItem != null)
             {
-
+                ArticleWebView.Visibility = Visibility.Collapsed;
+                LoadingProgressBar.Visibility = Visibility.Visible;
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
                 ViewModel.CurrentArticle.UnRead = false;
             }

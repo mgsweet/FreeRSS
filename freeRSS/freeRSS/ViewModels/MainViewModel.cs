@@ -118,5 +118,26 @@ namespace freeRSS.ViewModels
 
         private const string NO_ARTICLES_MESSAGE = "There are no starred articles.";
         private const string ALREADY_ADDED_MESSAGE = "This feed has already been added.";
+
+        /// <summary>
+        /// 控制前端最小宽度时的页面变化 
+        /// </summary>
+        public bool IsSelected {
+            get { return _isSelected; }
+            set
+            {
+                // CurrentArticle is a special case, so it doesn't use SetProperty 
+                // to update the backing field, raising the PropertyChanged event
+                // only when the field value changes. Instead, CurrentArticle raises
+                // PropertyChanged every time the setter is called. This ensures
+                // that the ListView selection is updated when changing feeds, even 
+                // if the first article is the same in both feeds. It also ensures
+                // that clicking an article in the narrow view will always navigate
+                // to the details view, even if the article is already the current one.
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _isSelected;
     }
 }
