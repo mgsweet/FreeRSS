@@ -21,10 +21,10 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
+                <Grid Grid.Column="0" Width="20" Height="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
                     <Image x:Name="ShortcutIcon"
-                               Width="20" 
-                               Height="20" 
+                               Width="17" 
+                               Height="17" 
                                Source="{x:Bind ShortcutIconSourceName, Mode=OneWay}" 
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center" />
@@ -53,8 +53,8 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Grid ToolTipService.ToolTip="Unread" Grid.Row="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="2" Margin="-5,10,6,0" Padding="0,1,0,0">
-                    <Image Width="20" Height="20" Source="Assets/default/FeedHead.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Grid ToolTipService.ToolTip="Unread" Grid.Row="0" Width="20" Height="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Top" CornerRadius="2" Margin="-5,10,6,0" Padding="0,1,0,0">
+                    <Image Width="17" Height="17" Source="Assets/default/FeedHead.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
                 <Grid Grid.Column="1" MaxHeight="100">
                     <Grid.RowDefinitions>
@@ -121,10 +121,13 @@
                 <Rectangle Grid.Column="1" 
                     x:Name="GridTitleBar" Fill="#00000000"/>
 
-                <Button Grid.Column="2"
-                        ToolTipService.ToolTip="Favorite"
-                        Content="&#xE24A;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
+                <!-- 空心：&#xE1CE;;  实心： &#xE249;  -->
+                <ToggleButton Grid.Column="2"
+                              ToolTipService.ToolTip="Favorite"
+                              Content="&#xE1CE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
+                              FontSize="14"
+                              IsChecked="{Binding ViewModel.CurrentArticle.IsStarred, Mode=TwoWay}"
+                              Width="48" Height="32" Foreground="White" Style="{StaticResource topBar_ToggleButtonStyle}"
                         />
                 <Button Grid.Column="3"
                         ToolTipService.ToolTip="Share"
@@ -173,29 +176,23 @@
                               Grid.Row="1" 
                               ItemClick="FeedTotalList_ItemClick">
                         <ListViewItem>
-                            <Grid HorizontalAlignment="Right" Width="222">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="36"/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid ToolTipService.ToolTip="Unread" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" 
-                                      VerticalAlignment="Center" CornerRadius="2">
-                                    <Image Width="20" Height="20"  Source="Assets/default/unread.png" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                </Grid>
-                                <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Unread" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
-                                <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
-                            </Grid>
-                        </ListViewItem>
-                        <ListViewItem>
                             <Grid  Width="222" HorizontalAlignment="Right">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="36"/>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid ToolTipService.ToolTip="Articles that you've starred" Grid.Column="0" Width="20" Background="White" BorderThickness="0,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Center" CornerRadius="2">
-                                    <SymbolIcon Symbol="Favorite" Foreground="#E5000000" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <Grid ToolTipService.ToolTip="Articles that you've starred" 
+                                      Grid.Column="0" Height="20" Width="20" 
+                                      Background="White" BorderThickness="0,0,0,1" 
+                                      HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                      CornerRadius="2">
+                                    <Image x:Name="ShortcutIcon"
+                                           Width="15" 
+                                           Height="15" 
+                                           Source="Assets/default/favorite.png" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" />
                                 </Grid>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Favorites" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
                                 <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
