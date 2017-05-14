@@ -15,13 +15,15 @@ namespace freeRSS.Models
 
         public string Title { get; set; }
 
-        public int FeedId { get; set; }
-
         public string FeedName { get; set; }
 
         public string Description { get; set; }
 
+
+        // 只需要用来绑定的属性
         public string Summary { get; set; }
+        public int FeedId { get; set; }
+        public string FeedIconSourceAsString { get; set; }
 
         // 这里不需要SourceAsString,因为这个是一构建好之后就不可以改变的了，
         // 只是在存数据库的时候需要转换成string，在构建的时候直接在构造函数里面写好new Uri即可
