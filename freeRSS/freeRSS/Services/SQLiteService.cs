@@ -134,5 +134,10 @@ namespace freeRSS.Services
             await _db.InsertOrReplaceAsync(a);
             return (int)a.Id;
         }
+
+        public static async Task UpdateFeedInfoAsync(FeedInfo f)
+        {
+            await _db.UpdateAsync(f);
+        }
     }
 }
