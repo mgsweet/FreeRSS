@@ -264,13 +264,13 @@
                               />
                     </Grid>
 
-                    
+
 
                     <ContentControl Grid.Column="1"
                                     VerticalContentAlignment="Stretch" 
                                     HorizontalContentAlignment="Stretch"
                                     >
-                        <WebView  Source="http://www.baidu.com"></WebView>
+                        <WebView  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"></WebView>
                     </ContentControl>
                 </Grid>
             </SplitView.Content>
