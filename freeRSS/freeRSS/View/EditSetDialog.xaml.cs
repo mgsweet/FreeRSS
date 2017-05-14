@@ -1,17 +1,31 @@
-﻿using System;
+﻿using freeRSS.Schema;
+using freeRSS.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
-using freeRSS.ViewModels;
-using freeRSS.Schema;
+// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上有介绍
 
 namespace freeRSS.View
 {
-    // More about ContentDialog: https://docs.microsoft.com/en-us/uwp/api/Windows.UI.Xaml.Controls.ContentDialog
-
-    public sealed partial class FeedSetDialog : ContentDialog
+    /// <summary>
+    /// 可用于自身或导航至 Frame 内部的空白页。
+    /// </summary>
+    public sealed partial class EditSetDialog : ContentDialog
     {
+        MainViewModel ViewModel = MainPage.Current.ViewModel;
+
         public enum FeedGetResult
         {
             getFeedSuccess,
@@ -22,7 +36,7 @@ namespace freeRSS.View
 
         public FeedGetResult Result { get; private set; }
 
-        public FeedSetDialog()
+        public EditSetDialog()
         {
             this.InitializeComponent();
             this.Opened += FeedSetDialog_Opened;
@@ -33,7 +47,7 @@ namespace freeRSS.View
             this.Result = FeedGetResult.Nothing;
         }
 
-        private async void AddFeed_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void Save_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             // Ensure the Feed or Site URL fields isn't empty. If a required field
             // is empty, set args.Cancel = true to keep the dialog open.
@@ -55,25 +69,12 @@ namespace freeRSS.View
                 return;
             }
 
-            var newfeed = new FeedViewModel(new FeedInfo {
-                Source = this.feedTextBox.Text,
-            });
-            await newfeed.RefreshAsync();
-
-            if (newfeed.ErrorMessage == null)
-            {
-                MainPage.Current.ViewModel.Feeds.Add(newfeed);
-            } else
-            {
-                args.Cancel = true;
-                errorTextBlock.Text = newfeed.ErrorMessage;
-            }
+            
         }
 
         private void Cancel_ButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             return;
         }
-
     }
 }

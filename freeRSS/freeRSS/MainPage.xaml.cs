@@ -12,6 +12,8 @@ using Windows.ApplicationModel.UserDataAccounts;
 using freeRSS.ViewModels;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using freeRSS.Models;
+using System.Diagnostics;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -176,7 +178,21 @@ namespace freeRSS
         {
             FeedsList.SelectedItem = null;
         }
+
+
+        private void RSS_ArticleListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (RSS_ArticleListView.SelectedItem != null)
+            {
+                ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
+                ViewModel.CurrentArticle.UnRead = false;
+            }
+        }
+
+        private void FeedsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //需要一个默认的CurrrentArticle
+            RSS_ArticleListView.SelectedItem = null;
+        }
     }
-
-
 }

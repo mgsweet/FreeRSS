@@ -76,7 +76,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="6*"></RowDefinition>
-            <RowDefinition Height="683*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Background="#D8000000" Height="32">
             <!--自定义标题栏控件-->
@@ -126,8 +125,9 @@
                               ToolTipService.ToolTip="Favorite"
                               Content="&#xE1CE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
                               FontSize="14"
-                              IsChecked="{Binding ViewModel.CurrentArticle.IsStarred, Mode=TwoWay}"
-                              Width="48" Height="32" Foreground="White" Style="{StaticResource topBar_ToggleButtonStyle}"
+                              IsChecked="{x:Bind ViewModel.CurrentArticle.IsStarred, Mode=TwoWay}"
+                              Width="48" Height="32" Foreground="White" 
+                              Style="{StaticResource topBar_ToggleButtonStyle}"
                         />
                 <Button Grid.Column="3"
                         ToolTipService.ToolTip="Share"
@@ -205,7 +205,7 @@
                                   IsItemClickEnabled="True"
                                   ItemsSource="{x:Bind ViewModel.Feeds, Mode=OneWay}"
                                   ItemTemplate="{StaticResource FeedsListItemTemplate}"
-                                  ItemClick="FeedsList_ItemClick">
+                                  ItemClick="FeedsList_ItemClick" SelectionChanged="FeedsList_SelectionChanged">
                         </ListView>
                     </SplitView>
                     <ListView x:Name="FeedEditListView"
@@ -243,13 +243,28 @@
                         <ColumnDefinition x:Name="columnRight" Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <ListView Background="#FF373737"
-                              x:Name="RSS_ArticleListView" Grid.Column="0"                  
-                              ItemTemplate="{StaticResource RSS_ArticleTemplate}"
-                              ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}"/>
 
-                    <!--加载时显示-->
-                    <ProgressBar Visibility="Collapsed" Grid.Column="0" IsIndeterminate="True"></ProgressBar>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        
+                        <!--加载时显示-->
+                        <ProgressBar Grid.Row="0"
+                                     Visibility="{x:Bind ViewModel.CurrentFeed.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"  
+                                     IsIndeterminate="True"/>
+
+                        <ListView Background="#FF373737"
+                                  Grid.Row="1"
+                              x:Name="RSS_ArticleListView"     
+                              ItemTemplate="{StaticResource RSS_ArticleTemplate}"
+                              ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}" 
+                              SelectionChanged="RSS_ArticleListView_SelectionChanged" 
+                              />
+                    </Grid>
+
+                    
 
                     <ContentControl Grid.Column="1"
                                     VerticalContentAlignment="Stretch" 
