@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Data;
 
 namespace freeRSS.Common
 {
-    class DateTimeOffSetStringToDateTime : IValueConverter
+    public class DateTimeOffSetStringToDateTime : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -16,7 +16,7 @@ namespace freeRSS.Common
             DateTimeOffset targetTimeOffset;
             DateTime targetTime;
 
-            string targetUISring = sourceTimeString;
+            string targetUIString = sourceTimeString;
 
             //正则匹配
             var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -40,10 +40,10 @@ namespace freeRSS.Common
                 Offset = new TimeSpan(OffsetHour, OffsetMin, 0);
 
                 targetTimeOffset = new DateTimeOffset(Year, Month, Day, Hour, Minute, Second, Offset);
-                targetTime = targetTimeOffset.DateTime;
+                targetTime = targetTimeOffset.LocalDateTime;
 
-                targetUISring = targetTime.ToString("f");
-                return targetTime;
+                targetUIString = targetTime.ToString("f");
+                return targetUIString;
             }
             else
             {
