@@ -143,7 +143,7 @@ namespace freeRSS
 
 
         /// <summary>
-        /// 修改一个Subscribtion
+        /// 新建一个Subscribtion
         /// </summary>
         private async void AddFeedButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
@@ -159,7 +159,7 @@ namespace freeRSS
         {
             EditDialog EditFeedDialog = new EditDialog();
             await EditFeedDialog.ShowAsync();
-            FeedEditListView.SelectedItem = null;
+            FeedEditListView.SelectedItem = null;   
         }
 
         /// <summary>
@@ -185,6 +185,7 @@ namespace freeRSS
             if (RSS_ArticleListView.SelectedItem != null)
             {
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
+                Debug.WriteLine(((ArticleModel)RSS_ArticleListView.SelectedItem).Title);
                 ViewModel.CurrentArticle.UnRead = false;
             }
         }
