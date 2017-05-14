@@ -10,6 +10,7 @@
         <!-- Application-specific resources -->
         <ResourceDictionary>
             <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <common:DateTimeOffSetStringToDateTime x:Key="StringToDateTimeConverter" />
 
             <ResourceDictionary.MergedDictionaries>
                 <!-- 

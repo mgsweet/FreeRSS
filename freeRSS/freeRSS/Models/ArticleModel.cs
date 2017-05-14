@@ -39,7 +39,10 @@ namespace freeRSS.Models
         public bool IsStarred
         {
             get { return _isStarred; }
-            set { SetProperty(ref _isStarred, value); }
+            set {
+                SetProperty(ref _isStarred, value);
+
+            }
         }
 
         private bool _unread = true;

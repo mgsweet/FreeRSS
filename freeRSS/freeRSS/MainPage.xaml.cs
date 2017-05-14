@@ -157,6 +157,7 @@ namespace freeRSS
         /// </summary>
         private async void EditFeedButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
+
             EditDialog EditFeedDialog = new EditDialog();
             await EditFeedDialog.ShowAsync();
             FeedEditListView.SelectedItem = null;   
@@ -184,8 +185,8 @@ namespace freeRSS
         {
             if (RSS_ArticleListView.SelectedItem != null)
             {
+
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
-                Debug.WriteLine(((ArticleModel)RSS_ArticleListView.SelectedItem).Title);
                 ViewModel.CurrentArticle.UnRead = false;
             }
         }

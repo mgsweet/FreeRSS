@@ -76,14 +76,13 @@
                                Foreground="Gray"
                                FontSize="10"
                                Margin="0,5,0,0"/>
-                    <!-- time display format: "· 4:00 PM" -->
-                    <TextBlock Text="{x:Bind PubDate, Mode=OneWay}" 
+                    <TextBlock Text="{x:Bind PubDate, Mode=OneWay, Converter={StaticResource StringToDateTimeConverter}}" 
                                Grid.Row="0" 
                                Foreground="Gray" 
                                FontSize="10" 
                                UseLayoutRounding="True"
                                HorizontalAlignment="Right" 
-                               Margin="160,0,0,0"/>
+                               Margin="110,0,0,0"/>
                     <TextBlock TextWrapping="Wrap"
                                MaxLines="2"
                                TextTrimming="CharacterEllipsis"
