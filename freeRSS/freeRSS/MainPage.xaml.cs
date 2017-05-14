@@ -14,16 +14,13 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using freeRSS.Models;
 using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
 namespace freeRSS
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
 
-    
     public sealed partial class MainPage : Page
     {
         public static MainPage Current = null;
@@ -42,10 +39,25 @@ namespace freeRSS
 
             
             this.InitializeComponent();
-            //自适应监控窗口变化
             //设置顶部UI
-            this.SizeChanged += MainPage_SizeChanged;
             setTitleUI();
+            setWebView();
+            //自适应监控窗口变化
+            //this.SizeChanged += MainPage_SizeChanged;
+
+        }
+
+        private void setWebView()
+        {
+            ArticleWebView.ContentLoading += (s, e) =>
+             {
+                 LoadingProgressBar.Visibility = Visibility.Visible;
+             };
+            ArticleWebView.LoadCompleted += (s, e) =>
+            {
+                ArticleWebView.Visibility = Visibility.Visible;
+                LoadingProgressBar.Visibility = Visibility.Collapsed;
+            };
         }
 
         /// <summary>
@@ -53,6 +65,9 @@ namespace freeRSS
         /// </summary>
         private void setTitleUI()
         {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+
             Window.Current.SetTitleBar(GridTitleBar); 
             var view = ApplicationView.GetForCurrentView();
             view.TitleBar.BackgroundColor = Color.FromArgb(255, 37, 37, 37);
@@ -73,72 +88,6 @@ namespace freeRSS
         private void PaneOpenTrigger_Click(object sender, RoutedEventArgs e)
         {
             RootSplitView.IsPaneOpen = RootSplitView.IsPaneOpen ? false : true;
-        }
-
-        
-
-        /// <summary>
-        /// 监控页面大小变化，做自适应改变
-        /// </summary>
-        private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdateLayout(e.NewSize.Width);
-        }
-
-        /// <summary>
-        /// 更强大的自适应控制
-        /// </summary>
-        private void UpdateLayout(double newWidth)
-        {
-            // 固定值
-            const double MinWindowSnapPoint = 320;
-            const double MediumWindowSnapPoint = 720;
-            const double LargeWindowSnapPoint = 1024;
-            GridLength zeroGridLength = new GridLength(0);
-            GridLength oneStarGridLength = new GridLength(1, GridUnitType.Star);
-            GridLength LeftBarLength = new GridLength(250);
-
-            if (newWidth >= MinWindowSnapPoint && newWidth < MediumWindowSnapPoint)
-            {
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = false;
-
-                this.RootSplitView.DisplayMode = SplitViewDisplayMode.Overlay;
-                if (RSS_ArticleListView.SelectedItem == null)
-                {
-                    columnRight.Width = zeroGridLength;
-                    columnLeft.Width = oneStarGridLength;
-                    columnRightBar.Width = zeroGridLength;
-                    columnLeftBar.Width = oneStarGridLength;
-                }
-                else
-                {
-                    columnLeft.Width = zeroGridLength;
-                    columnRight.Width = oneStarGridLength;
-                    columnLeftBar.Width = zeroGridLength;
-                    columnRightBar.Width = oneStarGridLength;
-                }
-            }
-            else
-            {
-                var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-                coreTitleBar.ExtendViewIntoTitleBar = true;
-                columnLeft.Width = LeftBarLength;
-                columnRight.Width = oneStarGridLength;
-                columnLeftBar.Width = LeftBarLength;
-                columnRightBar.Width = oneStarGridLength;
-                if (newWidth >= LargeWindowSnapPoint)
-                {
-                    this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactInline;
-                    this.RootSplitView.IsPaneOpen = true;
-                }
-                else
-                {
-                    this.RootSplitView.DisplayMode = SplitViewDisplayMode.CompactOverlay;
-                    this.RootSplitView.IsPaneOpen = false;
-                }
-            }
-            
         }
 
 
@@ -185,7 +134,8 @@ namespace freeRSS
         {
             if (RSS_ArticleListView.SelectedItem != null)
             {
-
+                ArticleWebView.Visibility = Visibility.Collapsed;
+                LoadingProgressBar.Visibility = Visibility.Visible;
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
                 ViewModel.CurrentArticle.UnRead = false;
             }
@@ -195,6 +145,23 @@ namespace freeRSS
         {
             //需要一个默认的CurrrentArticle
             RSS_ArticleListView.SelectedItem = null;
+        }
+
+        private void ShareButton_Click(object sender, RoutedEventArgs e)
+        {
+            DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
+            DataTransferManager.ShowShareUI();
+        }
+
+        private void OnShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            var toShare = ViewModel.CurrentArticle;
+            var deferral = args.Request.GetDeferral();
+            DataRequest request = args.Request;
+            request.Data.Properties.Title = toShare.Title;
+            request.Data.Properties.Description = toShare.PubDate;
+            request.Data.SetText(toShare.Summary + "\n" + toShare.SourceAsString);
+            deferral.Complete();
         }
 
         private async void buttonSync_Click(object sender, RoutedEventArgs e)

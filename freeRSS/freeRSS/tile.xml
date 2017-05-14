@@ -1,0 +1,39 @@
+<tile>
+  <visual>
+    
+    <binding template="TileSmall" >
+      <text hint-style="caption" >Titles</text>
+      <!--image src="" placement="background"-->
+    </binding>
+    
+    <binding template="TileMedium" branding="name"  displayName="RSS">
+      <text hint-style="caption">Titles</text>
+      <text>Description</text>
+      <!--image src="" placement="background"-->
+      <text></text>
+      <text>PublishedDate</text>
+    </binding>
+    
+    <binding template="TileWide"  branding="name" displayName="RSS">
+      <text hint-style="caption">Titles</text>
+       <!--image src="" placement="background"-->
+      <text>Description</text>
+      <text></text>
+      <text>PublishedDate</text>
+    </binding>
+    
+    <binding template="TileLarge"  branding="name" displayName="RSS">
+      <text hint-style="caption">Titles</text>
+      <!--image src="" placement="background"-->
+      <text>Description</text>
+     <text></text>
+     <text></text>
+     <text></text>
+     <text></text>
+     <text></text>
+     <text></text>
+     <text></text>
+     <text>PublishedDate</text>
+ </binding> 
+  </visual>
+</tile>

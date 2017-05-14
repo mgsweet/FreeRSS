@@ -10,6 +10,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
+        <!--Feed template-->
         <DataTemplate x:Key="FeedsListItemTemplate"
                       x:DataType="viewmodels:FeedViewModel"
                       >
@@ -46,6 +47,7 @@
             </Grid>
         </DataTemplate>
 
+        <!--Article template-->
         <DataTemplate x:Key="RSS_ArticleTemplate"
                       x:DataType="models:ArticleModel">
             <Grid Margin="0,0,0,3" >
@@ -105,6 +107,49 @@
     </Page.Resources>
 
     <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource LargeWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.DisplayMode"
+                                Value="CompactInline" />
+                        <Setter Target="RootSplitView.IsPaneOpen"
+                                Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MediumWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.DisplayMode"
+                                Value="CompactOverlay" />
+                        <Setter Target="RootSplitView.IsPaneOpen"
+                                Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource MinWindowSnapPoint}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.DisplayMode"
+                                Value="Overlay" />
+                        <Setter Target="RootSplitView.IsPaneOpen"
+                                Value="False" />
+                        <Setter Target="columnLeftBar.Width"
+                                Value="0"/>
+                        <Setter Target="sayingText.Text"
+                                Value="0"/>
+                        
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="6*"></RowDefinition>
@@ -127,7 +172,8 @@
                     VerticalAlignment="Bottom" 
                     Click="PaneOpenTrigger_Click"/>
             <Grid Grid.Column="1" Background="#FF373737">
-                <TextBlock Text="Enjoy Read and write with FreeRSS" 
+                <TextBlock Text="To be learned, happier, and freer." 
+                           x:Name="sayingText"
                            VerticalAlignment="Center" FontSize="12" FontFamily="Segoe UI" 
                            FontWeight="Normal" Margin="10,0" Foreground="White"/>
                 <Button
@@ -162,10 +208,13 @@
                               Width="48" Height="32" Foreground="White" 
                               Style="{StaticResource topBar_ToggleButtonStyle}"
                         />
-                <Button Grid.Column="3"
+                <Button x:Name="ShareButton" Grid.Column="3"
                         ToolTipService.ToolTip="Share"
                         Content="&#xE72D;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}" Margin="0,0,170,0"
+                        Width="48" Height="32" Foreground="White" 
+                        Style="{StaticResource myTitleButton}"
+                        VerticalAlignment="Bottom" Click="ShareButton_Click"
+                        Margin="0,0,170,0"
                         />
             </Grid>
         </Grid>
@@ -229,7 +278,7 @@
                                            VerticalAlignment="Center" />
                                 </Grid>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Favorites" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
-                                <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                                <TextBlock Margin="11,1,0,0" Text="{x:Bind ViewModel.StarredFeed.UnreadNum}" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
                             </Grid>
                         </ListViewItem>
                     </ListView>
@@ -273,25 +322,26 @@
             <SplitView.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="columnLeft" Width="250"></ColumnDefinition>
+                        <ColumnDefinition x:Name="columnLeft" Width="250" ></ColumnDefinition> <!--250-->
                         <ColumnDefinition x:Name="columnRight" Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
 
-                    <Grid Grid.Column="0">
+                    <Grid
+                          Grid.Column="0" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        
+
                         <!--加载时显示-->
                         <ProgressBar Grid.Row="0"
                                      Visibility="{x:Bind ViewModel.CurrentFeed.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"  
                                      IsIndeterminate="True"/>
 
-                        <ListView Background="#FF373737"
-                                  Grid.Row="1"
-                                  x:Name="RSS_ArticleListView"     
+                        <ListView x:Name="RSS_ArticleListView" 
+                                  Background="#FF373737"
+                                  Grid.Row="1"   
                                   ItemTemplate="{StaticResource RSS_ArticleTemplate}"
                                   ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}" 
                                   SelectionChanged="RSS_ArticleListView_SelectionChanged" 
@@ -299,13 +349,28 @@
                     </Grid>
 
 
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ProgressBar x:Name="LoadingProgressBar"
+                                     IsIndeterminate="True"
+                                     Visibility="Collapsed"/>
+                        <WebView x:Name="ArticleWebView"
+                                 Grid.Row="1"
+                                 Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"/>
+                    </Grid>
 
-                    <ContentControl Grid.Column="1"
+
+                    <!--<ContentControl Grid.Column="1"
                                     VerticalContentAlignment="Stretch" 
                                     HorizontalContentAlignment="Stretch"
                                     >
-                        <WebView  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"></WebView>
-                    </ContentControl>
+                        
+                        <WebView x:Name="articleWebView"
+                                 Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"></WebView>
+                    </ContentControl>-->
                 </Grid>
             </SplitView.Content>
 
