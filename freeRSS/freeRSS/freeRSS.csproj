@@ -110,8 +110,8 @@
     <Compile Include="ViewModels\FeedDataSource.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="View\EditSetDialog.xaml.cs">
-      <DependentUpon>EditSetDialog.xaml</DependentUpon>
+    <Compile Include="View\EditDialog.xaml.cs">
+      <DependentUpon>EditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FeedSetDialog.xaml.cs">
       <DependentUpon>FeedSetDialog.xaml</DependentUpon>
@@ -153,7 +153,7 @@
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Page>
-    <Page Include="View\EditSetDialog.xaml">
+    <Page Include="View\EditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
