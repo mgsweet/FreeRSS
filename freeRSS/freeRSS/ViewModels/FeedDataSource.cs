@@ -13,6 +13,7 @@ using freeRSS.Schema;
 using freeRSS.Services;
 using Windows.Web.Syndication;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace freeRSS.ViewModels
 {
@@ -48,11 +49,12 @@ namespace freeRSS.ViewModels
         {
             if (feedViewModel.Id != null)
             {
+                feedViewModel.Articles.Clear();
                 // working here 
                 (await SQLiteService.QueryAritclesByFeedIdAsync((int)feedViewModel.Id)).Select(item => new ArticleModel(item))
                 .ToList().ForEach(article =>
                 {
-                    feedViewModel.Articles.Clear();
+                    article.InitialOnlyBindingProperty(feedViewModel);
                     feedViewModel.Articles.Insert(0, article);
                 });
             }
@@ -61,10 +63,12 @@ namespace freeRSS.ViewModels
 
         private static async Task LoadStarredArticlesFromDb(FeedViewModel f)
         {
+            f.Articles.Clear();
             (await SQLiteService.QueryStarredOrUnreadArticlesAsync("Isstarred"))
             .Select(item => new ArticleModel(item))
             .ToList().ForEach(article =>
             {
+                article.InitialOnlyBindingProperty(f);
                 f.Articles.Insert(0, article);
             });
         }
@@ -146,7 +150,10 @@ namespace freeRSS.ViewModels
                             Isstarred = false
                         });
 
+
                         newArticle.Id = await SQLiteService.InsertOrReplaceArticleAsync(newArticle.AbstractInfo());
+                        // 初始化那些不存在数据库里面的用于绑定的属性
+                        newArticle.InitialOnlyBindingProperty(feedViewModel);
 
                         feedViewModel.Articles.Insert(0, newArticle);
                     }
@@ -189,5 +196,12 @@ namespace freeRSS.ViewModels
         private const string BAD_URL_MESSAGE = "Hmm... Are you sure this is an RSS URL?";
         private const string NO_REFRESH_MESSAGE = "Sorry. We can't get more articles right now.";
         private const string DEFAULT_HEAD_PATH = "ms-appx:///Assets/default/DefaultHead.png";
+
+        public static String RegexRemove(this string input, string pattern) => Regex.Replace(input, pattern, string.Empty);
+        public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
+        {
+            a.FeedName = feedViewModel.Name;
+            a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
+        }
     }
 }
