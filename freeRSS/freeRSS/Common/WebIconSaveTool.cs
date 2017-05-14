@@ -139,18 +139,31 @@ namespace freeRSS.Common
 
         /// <summary>
         /// 直接给出icon的URI网址进行下载
+        /// 使用Feed的ID来作为Icon的名字
         /// </summary>
-        public static async Task DownLoadIconFrom_IconUri(string Icon_Uri, string IconName)
+        public static async Task<bool> DownLoadIconFrom_IconUri(string Icon_Uri, string IconName)
         {
-            HttpClient httpClient = new HttpClient();
-            HttpResponseMessage response = await httpClient.GetAsync(Icon_Uri);
+            const string GOOGLE_ICON_SEARCH_PRE = @"http://www.google.com/s2/favicons?domain_url=";
 
-            response.EnsureSuccessStatusCode();
-            await response.Content.DownloadAsFileAsync(IconName, true).ContinueWith(
-                        (readTask) =>
-                        {
-                            Debug.WriteLine("文件下载完成！");
-                        });
+            string reqUrl = GOOGLE_ICON_SEARCH_PRE + Icon_Uri;
+            HttpClient httpClient = new HttpClient();
+
+            try
+            {
+                HttpResponseMessage response = await httpClient.GetAsync(reqUrl);
+                response.EnsureSuccessStatusCode();
+                await response.Content.DownloadAsFileAsync(IconName, true).ContinueWith(
+                            (readTask) =>
+                            {
+                                Debug.WriteLine("文件下载完成！");
+                            });
+                return true;
+            }
+            catch (Exception)
+            {
+                Debug.WriteLine("Try to DownLoad Favicon Failed! Check Your Internet Or Google May be Blocked!");
+                return false;
+            }
         }
 
         /// <summary>

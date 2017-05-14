@@ -114,7 +114,7 @@ namespace freeRSS.ViewModels
                 //if (cancellationToken.HasValue && cancellationToken.Value.IsCancellationRequested) return false;
 
                 // If it is a new feed without in the database, we need to get the default basic info
-                bool isHaveNew = false;
+                bool isHaveNewArticles = false;
 
                 if (feedViewModel.Id == null)
                 {
@@ -123,16 +123,25 @@ namespace freeRSS.ViewModels
                     feedViewModel.IconSrc = feed.IconUri??new Uri(DEFAULT_HEAD_PATH);
                     feedViewModel.LastBuildedTime = feed.LastUpdatedTime.ToString();
                     feedViewModel.Id = await SQLiteService.InsertOrReplaceFeedAsync(feedViewModel.AbstractInfo());
-                    isHaveNew = true;
+
+                    var homePageLinkString =feed.Links.Select(l => l.Uri).FirstOrDefault().ToString();
+                    await feedViewModel.TryUpdateIconSource(homePageLinkString);
+
+                    isHaveNewArticles = true;
                 }
 
-                if (isHaveNew || DateTimeOffset.Parse(feedViewModel.LastBuildedTime) < feed.LastUpdatedTime)
+                if (isHaveNewArticles || DateTimeOffset.Parse(feedViewModel.LastBuildedTime) < feed.LastUpdatedTime)
                 {
                     feedViewModel.LastBuildedTime = feed.LastUpdatedTime.ToString();
-                    isHaveNew = true;
+                    isHaveNewArticles = true;
                 }
 
-                if (isHaveNew)
+#if DEBUG
+                //feed.SaveValueAsXml();
+
+#endif
+
+                if (isHaveNewArticles)
                 {
                     var articleInfoList = new List<ArticleInfo>();
                     // Get Article from the newly getted feed And sync
@@ -150,14 +159,11 @@ namespace freeRSS.ViewModels
                             Isstarred = false
                         });
 
-
                         newArticle.Id = await SQLiteService.InsertOrReplaceArticleAsync(newArticle.AbstractInfo());
                         // 初始化那些不存在数据库里面的用于绑定的属性
                         newArticle.InitialOnlyBindingProperty(feedViewModel);
-
                         feedViewModel.Articles.Insert(0, newArticle);
                     }
-
                 } else
                 {
                     Debug.Write("The feed is already the newest.");
@@ -176,6 +182,39 @@ namespace freeRSS.ViewModels
                 return false;
             }
         }
+
+        /// <summary>
+        /// Try to Get The Favicon From the homepage Server
+        /// Use Google tool, So please ensure your computer unblocked  Google
+        /// </summary>
+        /// 
+
+        public static async Task  TryUpdateIconSource(this FeedViewModel feedViewModel, string HomePageUrl)
+        {
+            if (feedViewModel.IconSrc.ToString() != DEFAULT_HEAD_PATH) return;
+            if (HomePageUrl == string.Empty) return;
+
+            //一般这个不会发生
+            var feedId = feedViewModel.Id ?? -1;
+
+            int numberOfAttempts = 3;
+            bool success = false;
+
+            // 尝试下载3次
+            do
+            {
+                success = await WebIconDownloadTool.DownLoadIconFrom_IconUri(HomePageUrl, feedId.ToString());
+            } while (!success && numberOfAttempts-- > 0);
+
+
+            // 如果成功,更新ICONURI，否则IconSrc还会是默认的那个图标路径
+            if (success)
+            {
+                feedViewModel.IconSrc = new Uri(ApplicationData.Current.LocalFolder.Path.ToString() + @"\" + feedId.ToString());
+                await SQLiteService.UpdateFeedInfoAsync(feedViewModel.AbstractInfo());
+            }
+        }
+
 
         /// <summary>
         /// Saves the feed data (not including the Favorites feed) to DataBases. 
