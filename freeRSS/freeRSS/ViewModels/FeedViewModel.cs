@@ -221,6 +221,19 @@ namespace freeRSS.ViewModels
             }
         }
 
+        public Array NewestArticles
+        {
+            get
+            {
+                var a = new List<ArticleModel>();
+                for (int i = 0; i < 5; ++i)
+                {
+                    a.Add(Articles[i]);
+                }
+                return a.ToArray();
+            }
+        }
+
         /// <summary>
         /// set the shourcut img's source async.
         /// </summary>
