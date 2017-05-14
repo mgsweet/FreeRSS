@@ -53,7 +53,12 @@ namespace freeRSS.Models
             get { return _unread; }
             set {
                 SetProperty(ref _unread, value);
-                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+                if (this.Id != null)
+                {
+                    MainPage.Current.ViewModel.CurrentFeed.UnreadNum = 
+                        MainPage.Current.ViewModel.CurrentFeed.Articles.ToList().Where(x => x.UnRead == true).Count();
+                    SQLiteService._db.UpdateAsync(this.AbstractInfo());
+                }
             }
         }
 
