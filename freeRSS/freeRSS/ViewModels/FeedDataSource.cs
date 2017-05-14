@@ -210,6 +210,36 @@ namespace freeRSS.ViewModels
             }
         }
 
+        public static async Task ClearOutTimeArticlesAsync(this FeedViewModel feedViewModel)
+        {
+            var original = feedViewModel.Articles;
+
+            // 更新视图集合
+            var temp = feedViewModel.Articles.ToList();
+            temp.RemoveAll(x => x.UnRead == false && x.IsStarred == false);
+            feedViewModel.Articles = new System.Collections.ObjectModel.ObservableCollection<ArticleModel>(temp);
+            
+            var ClearArticles = from x in original
+                                where x.UnRead == false && x.IsStarred == false
+                                select x.AbstractInfo();
+            await SQLiteService.RemoveArticlesAsync(ClearArticles);
+        }
+
+        /// <summary>
+        /// Delete All the Related Articles in DataBases. 
+        /// </summary>
+        public static async Task RemoveRelatedArticlesAsync(this FeedViewModel feedViewModel)
+        {
+            // 先clear再异步删除，减少相应时间
+            var a = feedViewModel.Articles;
+            feedViewModel.Articles.Clear();
+            await SQLiteService.RemoveArticlesAsync(a.Select(article => article.AbstractInfo()));
+        }
+
+        public static async Task RemoveAFeedAsync(this FeedViewModel feedViewModel)
+        {
+            await SQLiteService.RemoveAFeedAsync(feedViewModel.AbstractInfo());
+        }
 
         /// <summary>
         /// Saves the feed data (not including the Favorites feed) to DataBases. 
@@ -236,6 +266,19 @@ namespace freeRSS.ViewModels
         {
             a.FeedName = feedViewModel.Name;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
+        }
+
+        public static void UpdateArticlesFeedName(this FeedViewModel feedViewModel)
+        {
+            // 不知道如何改变它本来的内容
+            var li = feedViewModel.Articles.ToList();
+            var newFeedName = feedViewModel.Name;
+            feedViewModel.Articles.Clear();
+
+            foreach (var x in li) {
+                x.FeedName = newFeedName;
+                feedViewModel.Articles.Add(x);
+            }
         }
     }
 }

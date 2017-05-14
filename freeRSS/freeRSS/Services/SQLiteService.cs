@@ -15,7 +15,7 @@ namespace freeRSS.Services
     public class SQLiteService
     {
         // 静态的sqlite链接实例
-        private  static SQLiteAsyncConnection _db;
+        public  static SQLiteAsyncConnection _db;
 
         // 静态方法创建全局连接实例，初始化建表
         public async static Task LoadDatabaseAsync()
@@ -88,19 +88,19 @@ namespace freeRSS.Services
             }
         }
 
-        public async static Task RemoveAnArticle(string LinkString)
-        {
-            var target = new ArticleInfo() { Source = LinkString };
 
-            var res_count = await _db.DeleteAsync(target);
-            if (res_count == 1)
+        // 其实可能可以使用模板化编程 = =， 以后再改吧
+        public async static Task RemoveArticlesAsync(IEnumerable<ArticleInfo> articles)
+        {
+            foreach (var item in articles)
             {
-                Debug.WriteLine("Delete One Article: {0}", LinkString);
+                await _db.DeleteAsync(item);
             }
-            else if (res_count == 0)
-            {
-                Debug.WriteLine("Article No Delete!: {0}", LinkString);
-            }
+        }
+
+        public async static Task RemoveAFeedAsync(FeedInfo feed)
+        {
+            await _db.DeleteAsync(feed); 
         }
 
         // Insert Method

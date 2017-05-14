@@ -134,6 +134,7 @@
                      x:Name="buttonSync" Content="&#xE117;" FontFamily="{ThemeResource SymbolThemeFontFamily}" 
                      HorizontalAlignment="Right"
                      Style="{StaticResource myTitleButton}"
+                     Click="buttonSync_Click"
                      Width="48" Height="32" Foreground="White" Background="#33000000"></Button>
             </Grid>
 
