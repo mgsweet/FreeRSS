@@ -136,11 +136,6 @@ namespace freeRSS.ViewModels
                     isHaveNewArticles = true;
                 }
 
-#if DEBUG
-                //feed.SaveValueAsXml();
-
-#endif
-
                 if (isHaveNewArticles)
                 {
                     var articleInfoList = new List<ArticleInfo>();
