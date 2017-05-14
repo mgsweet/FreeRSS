@@ -163,5 +163,13 @@ namespace freeRSS
             request.Data.SetText(toShare.Summary + "\n" + toShare.SourceAsString);
             deferral.Complete();
         }
+
+        private async void buttonSync_Click(object sender, RoutedEventArgs e)
+        {
+            if (ViewModel.CurrentFeed != null)
+            {
+                await ViewModel.CurrentFeed.RefreshAsync();
+            }
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace freeRSS.Models
             get { return _isStarred; }
             set {
                 SetProperty(ref _isStarred, value);
-
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
             }
         }
 
@@ -49,7 +49,10 @@ namespace freeRSS.Models
         public bool UnRead
         {
             get { return _unread; }
-            set { SetProperty(ref _unread, value); }
+            set {
+                SetProperty(ref _unread, value);
+                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+            }
         }
 
         // Construction From ArticleInfo
@@ -61,8 +64,8 @@ namespace freeRSS.Models
             Description = a.Description;
             Source = new Uri(a.Source);
             PubDate = a.PubDate;
-            IsStarred = a.Isstarred;
-            UnRead = a.Unread;
+            _isStarred = a.Isstarred;
+            _unread = a.Unread;
         }
 
         // 获得一个关于这个ArticleModel的ArticleInfo实例
