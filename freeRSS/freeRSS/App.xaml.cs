@@ -5,6 +5,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using freeRSS.Services;
+using Windows.UI.Notifications;
+using System.Xml;
+using System.IO;
 
 namespace freeRSS
 {
@@ -71,6 +74,8 @@ namespace freeRSS
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
             }
+
+
         }
 
         /// <summary>

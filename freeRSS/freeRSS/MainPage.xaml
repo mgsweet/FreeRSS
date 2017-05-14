@@ -207,10 +207,13 @@
                               Width="48" Height="32" Foreground="White" 
                               Style="{StaticResource topBar_ToggleButtonStyle}"
                         />
-                <Button Grid.Column="3"
+                <Button x:Name="ShareButton" Grid.Column="3"
                         ToolTipService.ToolTip="Share"
                         Content="&#xE72D;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
-                        Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}" Margin="0,0,170,0"
+                        Width="48" Height="32" Foreground="White" 
+                        Style="{StaticResource myTitleButton}"
+                        VerticalAlignment="Bottom" Click="ShareButton_Click"
+                        Margin="0,0,170,0"
                         />
             </Grid>
         </Grid>
@@ -274,7 +277,7 @@
                                            VerticalAlignment="Center" />
                                 </Grid>
                                 <TextBlock VerticalAlignment="Center" Grid.Column="1" Text="Favorites" Foreground="#FFF9F9F9" Margin="10,1,0,0" Height="20"/>
-                                <TextBlock Margin="11,1,0,0" Text="929" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
+                                <TextBlock Margin="11,1,0,0" Text="{x:Bind ViewModel.StarredFeed.UnreadNum}" Grid.Column="2" VerticalAlignment="Center" Foreground="#FFF9F9F9" HorizontalAlignment="Center" Height="20" Width="24"/>
                             </Grid>
                         </ListViewItem>
                     </ListView>
