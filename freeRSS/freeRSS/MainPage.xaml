@@ -26,7 +26,7 @@
                     <Image x:Name="ShortcutIcon"
                                Width="17" 
                                Height="17" 
-                               Source="{x:Bind ShortcutIconSourceName, Mode=OneWay}" 
+                               Source="{x:Bind IconSrc.AbsolutePath, Mode=OneWay}" 
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center" />
                 </Grid>
@@ -357,9 +357,15 @@
                         <ProgressBar x:Name="LoadingProgressBar"
                                      IsIndeterminate="True"
                                      Visibility="Collapsed"/>
+                        <Image Grid.Row="0" Grid.RowSpan="2" Source="Assets/SplashScreen.scale-200.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        
                         <WebView x:Name="ArticleWebView"
                                  Grid.Row="1"
+                                 DefaultBackgroundColor="#FF373737"
+                                 Visibility="Visible"
                                  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"/>
+
+                        
                     </Grid>
 
 
