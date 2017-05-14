@@ -26,6 +26,10 @@ namespace freeRSS.Models
         // 这里不需要SourceAsString,因为这个是一构建好之后就不可以改变的了，
         // 只是在存数据库的时候需要转换成string，在构建的时候直接在构造函数里面写好new Uri即可
         public Uri Source { get; set; }
+        public string SourceAsString
+        {
+            get { return Source?.OriginalString ?? string.Empty; }
+        }
 
         // 因为实际上这个pubDate其实是确定的，而且也不会有Datetime上面的更新
         // 所以这里直接把它存为string即可，也方便前端的绑定
