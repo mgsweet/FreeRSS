@@ -62,6 +62,7 @@ namespace freeRSS.View
         private async void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await MainPage.Current.ViewModel.CurrentFeed.ClearOutTimeArticlesAsync();
+            return;
         }
 
         /// <summary>

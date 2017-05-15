@@ -70,7 +70,6 @@ namespace freeRSS.ViewModels
             {
                 //article.InitialOnlyBindingProperty(f);
                 // 在这里总是有小问题
-                article.FeedId = 0;
                 article.FeedName = "My Favourite";
                 article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
                 article.FeedIconSourceAsString = f.IconSrc == null ? DEFAULT_HEAD_PATH : f.IconSrc.AbsolutePath;
@@ -222,8 +221,11 @@ namespace freeRSS.ViewModels
             // 更新视图集合
             var temp = feedViewModel.Articles.ToList();
             temp.RemoveAll(x => x.UnRead == false && x.IsStarred == false);
-            feedViewModel.Articles = new System.Collections.ObjectModel.ObservableCollection<ArticleModel>(temp);
-            
+            foreach (var item in temp)
+            {
+                feedViewModel.Articles.Remove(item);
+            }
+
             var ClearArticles = from x in original
                                 where x.UnRead == false && x.IsStarred == false
                                 select x.AbstractInfo();
@@ -235,10 +237,8 @@ namespace freeRSS.ViewModels
         /// </summary>
         public static async Task RemoveRelatedArticlesAsync(this FeedViewModel feedViewModel)
         {
-            // 先clear再异步删除，减少相应时间
-            var a = feedViewModel.Articles;
+            await SQLiteService.RemoveArticlesAsync(feedViewModel.Articles.Select(article => article.AbstractInfo()));
             feedViewModel.Articles.Clear();
-            await SQLiteService.RemoveArticlesAsync(a.Select(article => article.AbstractInfo()));
         }
 
         public static async Task RemoveAFeedAsync(this FeedViewModel feedViewModel)
