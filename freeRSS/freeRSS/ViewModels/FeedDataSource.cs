@@ -122,7 +122,7 @@ namespace freeRSS.ViewModels
                     isHaveNewArticles = true;
                 }
 
-                if (isHaveNewArticles)
+                if (isHaveNewArticles || feedViewModel.Articles.Count() == 0)
                 {
                     var articleInfoList = new List<ArticleInfo>();
                     // Get Article from the newly getted feed And sync

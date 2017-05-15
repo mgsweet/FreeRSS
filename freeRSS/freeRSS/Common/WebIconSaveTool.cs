@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
@@ -147,10 +148,10 @@ namespace freeRSS.Common
 
             string reqUrl = GOOGLE_ICON_SEARCH_PRE + Icon_Uri;
             HttpClient httpClient = new HttpClient();
-
+            var cancellationTokenSource = new CancellationTokenSource(2000);
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync(reqUrl);
+                HttpResponseMessage response = await httpClient.GetAsync(reqUrl, cancellationTokenSource.Token);
                 response.EnsureSuccessStatusCode();
                 await response.Content.DownloadAsFileAsync(IconName, true).ContinueWith(
                             (readTask) =>
