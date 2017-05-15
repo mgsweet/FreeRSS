@@ -44,26 +44,36 @@ namespace freeRSS.View
                 return;
             }
 
+            // 检查URI是否非法，是否重复
             try
             {
                 Uri check_uri = new Uri(this.feedTextBox.Text);
+                foreach (var item in MainPage.Current.ViewModel.Feeds)
+                {
+                    if (item.Source.Equals(check_uri))
+                    {
+                        args.Cancel = true;
+                        errorTextBlock.Text = "You already add this Feed!";
+                        return;
+                    }
+                }
             }
             catch (UriFormatException)
             {
                 args.Cancel = true;
                 errorTextBlock.Text = "FreeRSS could not find a feed at the specified location.";
                 return;
-            }
+            }       
 
+            // 开始尝试添加新的feed
             var newfeed = new FeedViewModel(new FeedInfo {
                 Source = this.feedTextBox.Text,
             });
+
+            // 在refresh里面内嵌了添加的逻辑，如果Id为空的话，就会往MainPage.Current.ViewModel.Feeds.里面加新的feed
             await newfeed.RefreshAsync();
 
-            if (newfeed.ErrorMessage == null)
-            {
-                MainPage.Current.ViewModel.Feeds.Add(newfeed);
-            } else
+            if (newfeed.ErrorMessage != null)
             {
                 args.Cancel = true;
                 errorTextBlock.Text = newfeed.ErrorMessage;

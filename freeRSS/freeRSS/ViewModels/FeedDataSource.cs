@@ -51,12 +51,14 @@ namespace freeRSS.ViewModels
             {
                 feedViewModel.Articles.Clear();
                 // working here 
+                feedViewModel.IsLoading = true;
                 (await SQLiteService.QueryAritclesByFeedIdAsync((int)feedViewModel.Id)).Select(item => new ArticleModel(item))
                 .ToList().ForEach(article =>
                 {
                     article.InitialOnlyBindingProperty(feedViewModel);
                     feedViewModel.Articles.Insert(0, article);
                 });
+                feedViewModel.IsLoading = false;
             }
             return;
         }
@@ -68,7 +70,11 @@ namespace freeRSS.ViewModels
             .Select(item => new ArticleModel(item))
             .ToList().ForEach(article =>
             {
-                article.InitialOnlyBindingProperty(f);
+                //article.InitialOnlyBindingProperty(f);
+                // 在这里总是有小问题
+                article.FeedName = "My Favourite";
+                article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
+                article.FeedIconSourceAsString = f.IconSrc.ToString();
                 f.Articles.Insert(0, article);
             });
         }
@@ -118,15 +124,18 @@ namespace freeRSS.ViewModels
 
                 if (feedViewModel.Id == null)
                 {
+                    // 第一次添加新的feed
                     feedViewModel.Name = string.IsNullOrEmpty(feedViewModel.Name) ? feed.Title.Text : feedViewModel.Name;
                     feedViewModel.Description = feed.Subtitle?.Text ?? feed.Title.Text;
-                    feedViewModel.IconSrc = feed.IconUri??new Uri(DEFAULT_HEAD_PATH);
+                    feedViewModel.IconSrc = string.Empty;
                     feedViewModel.LastBuildedTime = feed.LastUpdatedTime.ToString();
                     feedViewModel.Id = await SQLiteService.InsertOrReplaceFeedAsync(feedViewModel.AbstractInfo());
 
-                    var homePageLinkString =feed.Links.Select(l => l.Uri).FirstOrDefault().ToString();
+                    var homePageLinkString = (feed.IconUri == null) ? feed.Links.Select(l => l.Uri).FirstOrDefault().ToString() : feed.IconUri.ToString();
                     await feedViewModel.TryUpdateIconSource(homePageLinkString);
 
+                    // 现在UI上添加，缩短响应时间
+                    MainPage.Current.ViewModel.Feeds.Add(feedViewModel);
                     isHaveNewArticles = true;
                 }
 
@@ -186,26 +195,26 @@ namespace freeRSS.ViewModels
 
         public static async Task  TryUpdateIconSource(this FeedViewModel feedViewModel, string HomePageUrl)
         {
-            if (feedViewModel.IconSrc.ToString() != DEFAULT_HEAD_PATH) return;
+            if (feedViewModel.IconSrc.ToString() != string.Empty) return;
             if (HomePageUrl == string.Empty) return;
 
             //一般这个不会发生
             var feedId = feedViewModel.Id ?? -1;
 
-            int numberOfAttempts = 3;
+            int numberOfAttempts = 2;
             bool success = false;
 
-            // 尝试下载3次
+            // 尝试下载2次
             do
             {
                 success = await WebIconDownloadTool.DownLoadIconFrom_IconUri(HomePageUrl, feedId.ToString());
             } while (!success && numberOfAttempts-- > 0);
 
 
-            // 如果成功,更新ICONURI，否则IconSrc还会是默认的那个图标路径
+            // 如果成功,更新IconSrc, iconsrc为下载的图片文件的文件名，否则IconSrc还会是默认的那个图标路径
             if (success)
             {
-                feedViewModel.IconSrc = new Uri(ApplicationData.Current.LocalFolder.Path.ToString() + @"\" + feedId.ToString());
+                feedViewModel.IconSrc = feedId.ToString() + ".png";
                 await SQLiteService.UpdateFeedInfoAsync(feedViewModel.AbstractInfo());
             }
         }
@@ -217,8 +226,11 @@ namespace freeRSS.ViewModels
             // 更新视图集合
             var temp = feedViewModel.Articles.ToList();
             temp.RemoveAll(x => x.UnRead == false && x.IsStarred == false);
-            feedViewModel.Articles = new System.Collections.ObjectModel.ObservableCollection<ArticleModel>(temp);
-            
+            foreach (var item in temp)
+            {
+                feedViewModel.Articles.Remove(item);
+            }
+
             var ClearArticles = from x in original
                                 where x.UnRead == false && x.IsStarred == false
                                 select x.AbstractInfo();
@@ -230,10 +242,8 @@ namespace freeRSS.ViewModels
         /// </summary>
         public static async Task RemoveRelatedArticlesAsync(this FeedViewModel feedViewModel)
         {
-            // 先clear再异步删除，减少相应时间
-            var a = feedViewModel.Articles;
+            await SQLiteService.RemoveArticlesAsync(feedViewModel.Articles.Select(article => article.AbstractInfo()));
             feedViewModel.Articles.Clear();
-            await SQLiteService.RemoveArticlesAsync(a.Select(article => article.AbstractInfo()));
         }
 
         public static async Task RemoveAFeedAsync(this FeedViewModel feedViewModel)
@@ -262,11 +272,12 @@ namespace freeRSS.ViewModels
         private const string DEFAULT_HEAD_PATH = "ms-appx:///Assets/default/DefaultHead.png";
 
         public static String RegexRemove(this string input, string pattern) => Regex.Replace(input, pattern, string.Empty);
+
         public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
         {
             a.FeedName = feedViewModel.Name;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
-            a.FeedIconSourceAsString = feedViewModel.IconSrc.AbsolutePath;
+            a.FeedIconSourceAsString = feedViewModel.IconSrc.ToString();
         }
 
         public static void UpdateArticlesFeedName(this FeedViewModel feedViewModel)
