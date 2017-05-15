@@ -26,7 +26,7 @@
                     <Image x:Name="ShortcutIcon"
                                Width="17" 
                                Height="17" 
-                               Source="{x:Bind IconSrc.AbsolutePath, Mode=OneWay}" 
+                               Source="{x:Bind ShortcutIcon, Mode=OneWay}" 
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center" />
                 </Grid>
@@ -257,8 +257,8 @@
                               IsItemClickEnabled="True"
                               Grid.Row="1" 
                               ItemClick="FeedTotalList_ItemClick">
-                        <ListViewItem>
-                            <Grid  Width="222" HorizontalAlignment="Right">
+                        <ListViewItem >
+                            <Grid  Width="222" HorizontalAlignment="Right" >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="36"/>
                                     <ColumnDefinition/>
