@@ -68,12 +68,10 @@ namespace freeRSS.View
             var newfeed = new FeedViewModel(new FeedInfo {
                 Source = this.feedTextBox.Text,
             });
-            await newfeed.RefreshAsync();
+            MainPage.Current.ViewModel.Feeds.Add(newfeed);
 
-            if (newfeed.ErrorMessage == null)
-            {
-                MainPage.Current.ViewModel.Feeds.Add(newfeed);
-            } else
+            await newfeed.RefreshAsync();
+            if (newfeed.ErrorMessage != null)
             {
                 args.Cancel = true;
                 errorTextBlock.Text = newfeed.ErrorMessage;
