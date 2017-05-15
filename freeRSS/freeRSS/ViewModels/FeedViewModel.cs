@@ -53,7 +53,8 @@ namespace freeRSS.ViewModels
         public Uri IconSrc
         {
             get { return _iconSrc; }
-            set { SetProperty(ref _iconSrc, value); }
+            set { SetProperty(ref _iconSrc, value);
+            }
         }
 
         // 用户按一次刷新键之后它就会有可能进行更新

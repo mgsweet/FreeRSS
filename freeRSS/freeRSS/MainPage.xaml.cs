@@ -37,7 +37,6 @@ namespace freeRSS
                 //viewModel 初始化
                 await ViewModel.InitializeFeedsAsync();
             };
-
             
             this.InitializeComponent();
             //设置顶部UI
@@ -45,7 +44,6 @@ namespace freeRSS
             setWebView();
             //自适应监控窗口变化
             //this.SizeChanged += MainPage_SizeChanged;
-
         }
 
         private void setWebView()
@@ -127,6 +125,8 @@ namespace freeRSS
         /// </summary>
         private void FeedTotalList_ItemClick(object sender, ItemClickEventArgs e)
         {
+            ViewModel.CurrentArticle = null;
+            ViewModel.CurrentFeed = ViewModel.StarredFeed;
             FeedsList.SelectedItem = null;
         }
 
@@ -169,7 +169,8 @@ namespace freeRSS
         {
             if (ViewModel.CurrentFeed != null)
             {
-                await ViewModel.CurrentFeed.RefreshAsync();                           
+                await ViewModel.CurrentFeed.RefreshAsync();
+                //UpdateTile.UpDateTile(ViewModel.CurrentFeed.NewestArticles);
             }
         }
     }
