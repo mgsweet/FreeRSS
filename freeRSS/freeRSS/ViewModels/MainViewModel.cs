@@ -108,7 +108,10 @@ namespace freeRSS.ViewModels
         /// </summary>
         public async Task InitializeFeedsAsync()
         {
-            StarredFeed = await FeedDataSource.GetStarredFeedAsync();
+            // FeedDataSource.GetStarredFeedAsync()这个异步方法已经弃用，为了同步starredFeed的内容
+            // 逻辑改成了在构建普通Feed的时候同时插入构建starredFeed，可以work
+            //StarredFeed = await FeedDataSource.GetStarredFeedAsync();
+            StarredFeed = new FeedViewModel();
 
             var res = await FeedDataSource.GetFeedsAsync();
             foreach (var feed in res)

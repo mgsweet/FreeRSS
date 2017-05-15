@@ -57,6 +57,8 @@ namespace freeRSS.ViewModels
                 {
                     article.InitialOnlyBindingProperty(feedViewModel);
                     feedViewModel.Articles.Insert(0, article);
+                    // 在这里在开始的时候添加Favourite的文章
+                    if (article.IsStarred) MainPage.Current.ViewModel.StarredFeed.Articles.Insert(0, article);
                 });
                 feedViewModel.IsLoading = false;
             }
@@ -70,6 +72,8 @@ namespace freeRSS.ViewModels
             .Select(item => new ArticleModel(item))
             .ToList().ForEach(article =>
             {
+                // 查询数据库获
+
                 //article.InitialOnlyBindingProperty(f);
                 // 在这里总是有小问题
                 article.FeedName = "My Favourite";
