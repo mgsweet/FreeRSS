@@ -213,10 +213,10 @@ namespace freeRSS.ViewModels
 
         // 9. total Unread Num
         // 要考虑下是不是每次触发了unread都去遍历一次article看有多少文章未读，还是直接减一
-        private int? _unreadNum;
-        public int? UnreadNum
+        private int _unreadNum = -1;
+        public int UnreadNum
         {
-            get { return _unreadNum??(int?)this.Articles.ToList().Where(x => x.UnRead == true).Count(); }
+            get { return _unreadNum > 0 ? _unreadNum : this.Articles.ToList().Where(x => x.UnRead == true).Count() ; }
             set { SetProperty(ref _unreadNum, value); }
         }
 
@@ -225,9 +225,14 @@ namespace freeRSS.ViewModels
             get
             {
                 var a = new List<ArticleModel>();
-                for (int i = 0; i < 5; ++i)
+                int count = 5;
+                foreach (var item in this.Articles)
                 {
-                    a.Add(Articles[i]);
+                    if (item.UnRead)
+                    {
+                        a.Add(item);
+                        if (--count < 0) break;
+                    }
                 }
                 return a.ToArray();
             }

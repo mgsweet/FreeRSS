@@ -68,7 +68,10 @@ namespace freeRSS.ViewModels
             .Select(item => new ArticleModel(item))
             .ToList().ForEach(article =>
             {
-                article.InitialOnlyBindingProperty(f);
+                //article.InitialOnlyBindingProperty(f);
+                article.FeedName = "My Favourite";
+                article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
+                article.FeedIconSourceAsString = f.IconSrc.AbsolutePath;
                 f.Articles.Insert(0, article);
             });
         }
@@ -262,6 +265,7 @@ namespace freeRSS.ViewModels
         private const string DEFAULT_HEAD_PATH = "ms-appx:///Assets/default/DefaultHead.png";
 
         public static String RegexRemove(this string input, string pattern) => Regex.Replace(input, pattern, string.Empty);
+
         public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
         {
             a.FeedName = feedViewModel.Name;
