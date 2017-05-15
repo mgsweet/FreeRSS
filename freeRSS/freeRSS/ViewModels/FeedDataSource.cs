@@ -70,6 +70,7 @@ namespace freeRSS.ViewModels
             {
                 //article.InitialOnlyBindingProperty(f);
                 // 在这里总是有小问题
+                article.FeedId = 0;
                 article.FeedName = "My Favourite";
                 article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
                 article.FeedIconSourceAsString = f.IconSrc == null ? DEFAULT_HEAD_PATH : f.IconSrc.AbsolutePath;

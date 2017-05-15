@@ -44,16 +44,26 @@ namespace freeRSS.View
                 return;
             }
 
+            // 检查URI是否非法，是否重复
             try
             {
                 Uri check_uri = new Uri(this.feedTextBox.Text);
+                foreach (var item in MainPage.Current.ViewModel.Feeds)
+                {
+                    if (item.Source.Equals(check_uri))
+                    {
+                        args.Cancel = true;
+                        errorTextBlock.Text = "You already add this Feed!";
+                        return;
+                    }
+                }
             }
             catch (UriFormatException)
             {
                 args.Cancel = true;
                 errorTextBlock.Text = "FreeRSS could not find a feed at the specified location.";
                 return;
-            }
+            }       
 
             var newfeed = new FeedViewModel(new FeedInfo {
                 Source = this.feedTextBox.Text,

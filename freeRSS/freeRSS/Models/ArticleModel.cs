@@ -45,8 +45,25 @@ namespace freeRSS.Models
                 SetProperty(ref _isStarred, value);
                 if (this.Id != null)
                 {
-                    if (IsStarred) MainPage.Current.ViewModel.StarredFeed.Articles.Add(this);
-                    else MainPage.Current.ViewModel.StarredFeed.Articles.Remove(this);
+                    if (IsStarred)
+                    {
+                        var a = this;
+                        a.FeedName = "My Favourite";
+                        if (MainPage.Current.ViewModel.StarredFeed.Articles.Where(x => x==a).Count() == 0)
+                            MainPage.Current.ViewModel.StarredFeed.Articles.Add(a);
+                    }
+                    else
+                    {
+                        if (this.FeedName == "My Favourite")
+                        {
+                            MainPage.Current.ViewModel.StarredFeed.Articles.Remove(this);
+                        } else
+                        {
+                            var a = this;
+                            a.FeedName = "My Favourite";
+                            MainPage.Current.ViewModel.StarredFeed.Articles.Remove(a);
+                        }
+                    }
                     SQLiteService._db.UpdateAsync(this.AbstractInfo());
                 }
             }
