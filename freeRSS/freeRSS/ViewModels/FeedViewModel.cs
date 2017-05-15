@@ -55,6 +55,7 @@ namespace freeRSS.ViewModels
             get { return _iconSrc; }
             set {
                 SetProperty(ref _iconSrc, value);
+                setShortcutIcon(_iconSrc);
             }
         }
 
@@ -109,7 +110,8 @@ namespace freeRSS.ViewModels
             _name = "My Favourites";
             _description = "There are all my favourite articles.";
             _source = null;
-            _iconSrc = string.Empty;
+            //改成public
+            IconSrc = string.Empty;
             _lastBuildedTime = DateTimeOffset.Now.ToString();
 
             Articles = new ObservableCollection<ArticleModel>();
@@ -120,6 +122,8 @@ namespace freeRSS.ViewModels
         // 初始化函数, 通过在mainviewmodel里面获得的feeds列表构建所要的FeedViewModel
         public FeedViewModel (FeedInfo f)
         {
+            _shortcutIcon = new BitmapImage(new Uri("ms-appx:///Assets/default/FeedHead.png"));
+
             // 通过给进来的FeedInfo来设置各种与数据库相关的属性的值
             // 只要这里的Id是空的话，那么就可以表明这个是一个数据库中没有的feed了
             _id = f.Id;
@@ -127,7 +131,8 @@ namespace freeRSS.ViewModels
             // 可能这里的source会有两次重复设置，注意一下避免冗余
             _source = new Uri(f.Source);
             SourceAsString = f.Source;
-            _iconSrc = (f.Id == null) ? string.Empty : f.IconSrc;
+            //改成公有
+            IconSrc = (f.Id == null) ? string.Empty : f.IconSrc;
             _lastBuildedTime = f.LastBuildedTime;
             _description = f.Description;
 
@@ -198,23 +203,9 @@ namespace freeRSS.ViewModels
             }
         }
 
-        // 8. shortcutIconSource
-        private string _shortcutIconSourceName = "ms-appx:///Assets/default/FeedHead.png";
-        public string ShortcutIconSourceName
-        {
-            set
-            {
-                SetProperty(ref _shortcutIconSourceName, value);
-                setShortcutIcon();
-            }
-            get
-            {
-                return _shortcutIconSourceName;
-            }
-        }
-
-        // 9. total Unread Num
-        // 要考虑下是不是每次触发了unread都去遍历一次article看有多少文章未读，还是直接减一
+        /// <summary>
+        /// total Unread Num.
+        /// </summary>
         private int _unreadNum = -1;
         public int UnreadNum
         {
@@ -245,21 +236,20 @@ namespace freeRSS.ViewModels
         /// <summary>
         /// set the shourcut img's source async.
         /// </summary>
-        public async void setShortcutIcon()
+        private async void setShortcutIcon(string IconName)
         {
-            if (_shortcutIconSourceName== "")
+            if (IconName == "")
             {
                 //若名字为空用默认ICON
-                this._shortcutIcon = new BitmapImage(new Uri("ms-appx:///Assets/default/FeedHead.png"));
-                this._shortcutIconSourceName = "ms-appx:///Assets/default/FeedHead.png";
+                ShortcutIcon = new BitmapImage(new Uri("ms-appx:///Assets/default/FeedHead.png"));
             }
             else
             {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(_shortcutIconSourceName);
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(IconName);
                 IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
                 BitmapImage bitmapImage = new BitmapImage();
                 await bitmapImage.SetSourceAsync(fileStream);
-                this._shortcutIcon = bitmapImage;
+                ShortcutIcon = bitmapImage;
             }
         }
 

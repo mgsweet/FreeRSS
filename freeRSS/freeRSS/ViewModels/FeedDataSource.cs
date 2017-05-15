@@ -253,6 +253,7 @@ namespace freeRSS.ViewModels
         public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
         {
             a.FeedName = feedViewModel.Name;
+            a.FeedIconSource = feedViewModel.ShortcutIcon;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
             a.FeedIconSourceAsString = feedViewModel.IconSrc.ToString();
         }

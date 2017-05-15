@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using freeRSS.Common;
 using freeRSS.Services;
 using freeRSS.Schema;
+using Windows.UI.Xaml.Media;
 
 namespace freeRSS.Models
 {
@@ -19,6 +20,7 @@ namespace freeRSS.Models
 
         public string Description { get; set; }
 
+        public ImageSource FeedIconSource { get; set; }
 
         // 只需要用来绑定的属性
         public string Summary { get; set; }
