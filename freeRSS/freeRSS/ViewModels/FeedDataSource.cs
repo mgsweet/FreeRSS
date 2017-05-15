@@ -20,15 +20,6 @@ namespace freeRSS.ViewModels
 
     public static class FeedDataSource
     {
-        // Get the Favourite Articles
-        // 它这里的名字GetFeed, 在参考的代码中，包括了构建Feed，还有进行Feed的refresh
-        public static async Task<FeedViewModel> GetStarredFeedAsync()
-        {
-            // 在这里构建好StarredFeed的ViewModel然后返回回去
-            FeedViewModel StarredFeed = new FeedViewModel();
-            await LoadStarredArticlesFromDb(StarredFeed);
-            return StarredFeed;
-        }
 
         public static async Task<List<FeedViewModel>> GetFeedsAsync()
         {
@@ -57,26 +48,12 @@ namespace freeRSS.ViewModels
                 {
                     article.InitialOnlyBindingProperty(feedViewModel);
                     feedViewModel.Articles.Insert(0, article);
+                    // 在这里在开始的时候添加Favourite的文章
+                    if (article.IsStarred) MainPage.Current.ViewModel.StarredFeed.Articles.Insert(0, article);
                 });
                 feedViewModel.IsLoading = false;
             }
             return;
-        }
-
-        private static async Task LoadStarredArticlesFromDb(FeedViewModel f)
-        {
-            f.Articles.Clear();
-            (await SQLiteService.QueryStarredOrUnreadArticlesAsync("Isstarred"))
-            .Select(item => new ArticleModel(item))
-            .ToList().ForEach(article =>
-            {
-                //article.InitialOnlyBindingProperty(f);
-                // 在这里总是有小问题
-                article.FeedName = "My Favourite";
-                article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
-                article.FeedIconSourceAsString = f.IconSrc.ToString();
-                f.Articles.Insert(0, article);
-            });
         }
 
         // 添加扩展方法来方便MainViewModel来从上面控制refresh
@@ -145,7 +122,7 @@ namespace freeRSS.ViewModels
                     isHaveNewArticles = true;
                 }
 
-                if (isHaveNewArticles)
+                if (isHaveNewArticles || feedViewModel.Articles.Count() == 0)
                 {
                     var articleInfoList = new List<ArticleInfo>();
                     // Get Article from the newly getted feed And sync
@@ -276,6 +253,7 @@ namespace freeRSS.ViewModels
         public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
         {
             a.FeedName = feedViewModel.Name;
+            a.FeedIconSource = feedViewModel.ShortcutIcon;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
             a.FeedIconSourceAsString = feedViewModel.IconSrc.ToString();
         }

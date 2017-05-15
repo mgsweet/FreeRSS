@@ -26,7 +26,7 @@
                     <Image x:Name="ShortcutIcon"
                                Width="17" 
                                Height="17" 
-                               Source="ms-appx:///Assets/default/FeedHead.png"
+                               Source="{x:Bind ShortcutIcon, Mode=OneWay}"
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center" />
                 </Grid>
@@ -65,7 +65,7 @@
                       CornerRadius="2" Margin="-5,10,6,0" 
                       Padding="0,1,0,0">
                     <Image Width="17" Height="17" 
-                           Source="Assets/default/FeedHead.png" 
+                           Source="{x:Bind FeedIconSource, Mode=OneWay}" 
                            HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
                 <Grid Grid.Column="1">
@@ -282,6 +282,9 @@
                             </Grid>
                         </ListViewItem>
                     </ListView>
+                    <ProgressBar Grid.Row="2"
+                                 Visibility="{x:Bind ViewModel.CurrentFeed.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"  
+                                 IsIndeterminate="True" Foreground="#FF51CAF6" />
                     <!--FeedsList-->
                     <SplitView Grid.Row="3">
                         <ListView x:Name="FeedsList"
@@ -372,7 +375,7 @@
 
                         <WebView x:Name="ArticleWebView"
                                  Grid.Row="1"
-                                 DefaultBackgroundColor="#FF373737"
+                                 DefaultBackgroundColor="#FF424242"
                                  Visibility="Collapsed"
                                  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"/>
                     </Grid>

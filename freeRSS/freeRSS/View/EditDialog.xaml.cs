@@ -25,10 +25,10 @@ namespace freeRSS.View
         public EditDialog()
         {
             this.InitializeComponent();
-            this.Opened += FeedSetDialog_Opened;
+            this.Opened += EditDialog_Opened;
         }
 
-        void FeedSetDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
+        void EditDialog_Opened(ContentDialog sender, ContentDialogOpenedEventArgs args)
         {
             this.Result = EditFeedResult.Nothing;
         }
@@ -73,7 +73,7 @@ namespace freeRSS.View
         private async void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await MainPage.Current.ViewModel.CurrentFeed.ClearOutTimeArticlesAsync();
-            return;
+            this.Hide();
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace freeRSS.View
                 MainPage.Current.ViewModel.Feeds[0];
 
             MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
-            return;
+            this.Hide();
         }
     }
 }
