@@ -53,7 +53,9 @@ namespace freeRSS.ViewModels
         public string IconSrc
         {
             get { return _iconSrc; }
-            set { SetProperty(ref _iconSrc, value);
+            set {
+                SetProperty(ref _iconSrc, value);
+                ShortcutIconSourceName = IconSrc;
             }
         }
 
