@@ -13,7 +13,7 @@
     SecondaryButtonText="Save"
     SecondaryButtonClick="Save_ButtonClick"
     >
-    <StackPanel VerticalAlignment="Stretch">
+    <StackPanel>
         <TextBlock Text="The Feed's source:"
                    FontSize="10"
                    Foreground="#FF4F4C4C"/>
@@ -23,8 +23,7 @@
                  Header="Edit Feed Name:"    
                  PlaceholderText="{x:Bind ViewModel.CurrentFeed.Name, Mode=OneWay}"
                  SelectionHighlightColor="#FF4F4C4C" />
-        <TextBlock x:Name="errorTextBlock" Visibility="Collapsed" Foreground="Red"/>
-
+        <TextBlock x:Name="errorTextBlock" Foreground="Red"/>
         <Button x:Name="DeleteArticleButton"
                 BorderThickness="0.2"
                 BorderBrush="#10000000"

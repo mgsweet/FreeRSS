@@ -15,6 +15,6 @@
 
     <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <TextBox Name="feedTextBox" Header="Feed or Site URL"/>
-        <TextBlock x:Name="errorTextBlock"/>
+        <TextBlock x:Name="errorTextBlock" Foreground="Red"/>
     </StackPanel>
 </ContentDialog>

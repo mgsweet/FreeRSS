@@ -40,11 +40,22 @@ namespace freeRSS.View
             if (string.IsNullOrEmpty(feedTextBox.Text))
             {
                 //直接跳出不做更改
+                args.Cancel = true;
+                errorTextBlock.Text = "Feed should have a name.";
                 return;
             } else
             {
-                MainPage.Current.ViewModel.CurrentFeed.Name = feedTextBox.Text;
-                MainPage.Current.ViewModel.CurrentFeed.UpdateArticlesFeedName();
+                try
+                {
+                    MainPage.Current.ViewModel.CurrentFeed.Name = feedTextBox.Text;
+                    MainPage.Current.ViewModel.CurrentFeed.UpdateArticlesFeedName();
+                } catch (Exception e)
+                {
+                    args.Cancel = true;
+                    errorTextBlock.Text = e.ToString();
+                    return;
+                }
+                return;
             }
         }
 
@@ -62,6 +73,7 @@ namespace freeRSS.View
         private async void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             await MainPage.Current.ViewModel.CurrentFeed.ClearOutTimeArticlesAsync();
+            return;
         }
 
         /// <summary>
@@ -80,6 +92,7 @@ namespace freeRSS.View
                 MainPage.Current.ViewModel.Feeds[0];
 
             MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
+            return;
         }
     }
 }

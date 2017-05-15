@@ -107,7 +107,6 @@ namespace freeRSS
         /// </summary>
         private async void EditFeedButton_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-
             EditDialog EditFeedDialog = new EditDialog();
             await EditFeedDialog.ShowAsync();
             FeedEditListView.SelectedItem = null;   
