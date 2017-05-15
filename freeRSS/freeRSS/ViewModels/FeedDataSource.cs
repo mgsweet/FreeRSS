@@ -134,6 +134,8 @@ namespace freeRSS.ViewModels
                     var homePageLinkString = (feed.IconUri == null) ? feed.Links.Select(l => l.Uri).FirstOrDefault().ToString() : feed.IconUri.ToString();
                     await feedViewModel.TryUpdateIconSource(homePageLinkString);
 
+                    // 现在UI上添加，缩短响应时间
+                    MainPage.Current.ViewModel.Feeds.Add(feedViewModel);
                     isHaveNewArticles = true;
                 }
 
@@ -199,10 +201,10 @@ namespace freeRSS.ViewModels
             //一般这个不会发生
             var feedId = feedViewModel.Id ?? -1;
 
-            int numberOfAttempts = 3;
+            int numberOfAttempts = 2;
             bool success = false;
 
-            // 尝试下载3次
+            // 尝试下载2次
             do
             {
                 success = await WebIconDownloadTool.DownLoadIconFrom_IconUri(HomePageUrl, feedId.ToString());

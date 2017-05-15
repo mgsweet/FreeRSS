@@ -65,12 +65,14 @@ namespace freeRSS.View
                 return;
             }       
 
+            // 开始尝试添加新的feed
             var newfeed = new FeedViewModel(new FeedInfo {
                 Source = this.feedTextBox.Text,
             });
-            MainPage.Current.ViewModel.Feeds.Add(newfeed);
 
+            // 在refresh里面内嵌了添加的逻辑，如果Id为空的话，就会往MainPage.Current.ViewModel.Feeds.里面加新的feed
             await newfeed.RefreshAsync();
+
             if (newfeed.ErrorMessage != null)
             {
                 args.Cancel = true;
