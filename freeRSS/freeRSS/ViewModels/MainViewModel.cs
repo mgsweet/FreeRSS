@@ -27,6 +27,28 @@ namespace freeRSS.ViewModels
                     {
                         CurrentArticle = _currentFeed.Articles.First();
                     }
+                    else
+                    {
+                        // If the articles have not yet been loaded, clear CurrentArticle then
+                        // wait until the articles are loaded before selecting the first one. 
+                        CurrentArticle = null;
+                        NotifyCollectionChangedEventHandler handler = null;
+                        handler = (s, e) =>
+                        {
+                            if (e.Action == NotifyCollectionChangedAction.Add)
+                            {
+                                _currentFeed.Articles.CollectionChanged -= handler;
+
+                                // Use the dispatcher to update CurrentArticle. This fixes a timing issue that happens 
+                                // on app launch where the first article does not appear selected in the UI because 
+                                // change notification occurs for CurrentArticle before the UI has finished loading.
+                                var withoutAwait = CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(
+                                    Windows.UI.Core.CoreDispatcherPriority.Normal,
+                                    () => CurrentArticle = _currentFeed.Articles.First());
+                            }
+                        };
+                        _currentFeed.Articles.CollectionChanged += handler;
+                    }
                 }
             }
         }

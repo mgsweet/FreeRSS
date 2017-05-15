@@ -36,6 +36,8 @@ namespace freeRSS
             {
                 //viewModel 初始化
                 await ViewModel.InitializeFeedsAsync();
+                FeedsList.SelectedIndex = FeedsList.Items.Count > 0 ? 0 : -1;
+                RSS_ArticleListView.SelectedIndex = RSS_ArticleListView.Items.Count > 0 ? 0 : -1;
             };
             
             this.InitializeComponent();
@@ -118,6 +120,7 @@ namespace freeRSS
         {
             FeedTotalList.SelectedItem = null;
             ViewModel.CurrentFeed = (FeedViewModel)e.ClickedItem;
+            RSS_ArticleListView.SelectedIndex = RSS_ArticleListView.Items.Count > 0 ? 0 : -1;
         }
 
         /// <summary>
@@ -140,12 +143,6 @@ namespace freeRSS
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
                 ViewModel.CurrentArticle.UnRead = false;
             }
-        }
-
-        private void FeedsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //需要一个默认的CurrrentArticle
-            RSS_ArticleListView.SelectedItem = null;
         }
 
         private void ShareButton_Click(object sender, RoutedEventArgs e)

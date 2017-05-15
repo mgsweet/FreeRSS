@@ -26,7 +26,7 @@
                     <Image x:Name="ShortcutIcon"
                                Width="17" 
                                Height="17" 
-                               Source="{x:Bind ShortcutIcon, Mode=OneWay}" 
+                               Source="ms-appx:///Assets/default/FeedHead.png"
                                HorizontalAlignment="Center" 
                                VerticalAlignment="Center" />
                 </Grid>
@@ -288,7 +288,8 @@
                                   IsItemClickEnabled="True"
                                   ItemsSource="{x:Bind ViewModel.Feeds, Mode=OneWay}"
                                   ItemTemplate="{StaticResource FeedsListItemTemplate}"
-                                  ItemClick="FeedsList_ItemClick" SelectionChanged="FeedsList_SelectionChanged">
+                                  ItemClick="FeedsList_ItemClick"
+                                  >
                         </ListView>
                     </SplitView>
                     <ListView x:Name="FeedEditListView"
@@ -331,17 +332,25 @@
                           Grid.Column="0" >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto"/>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
                         <!--加载时显示-->
+
                         <ProgressBar Grid.Row="0"
+                                     Height="10"
                                      Visibility="{x:Bind ViewModel.CurrentFeed.IsLoading, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"  
-                                     IsIndeterminate="True"/>
+                                     IsIndeterminate="True" Foreground="#FF51CAF6" />
+
+                        <Grid Grid.Row="1" Background="#FFD33A3A"
+                              Visibility="{x:Bind ViewModel.CurrentFeed.IsEmpty, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0">
+                            <TextBlock  Text="No Article !" HorizontalAlignment="Center" Foreground="White"/>
+                        </Grid>
 
                         <ListView x:Name="RSS_ArticleListView" 
                                   Background="#FF373737"
-                                  Grid.Row="1"   
+                                  Grid.Row="2"   
                                   ItemTemplate="{StaticResource RSS_ArticleTemplate}"
                                   ItemsSource="{x:Bind ViewModel.CurrentFeed.Articles, Mode=OneWay}" 
                                   SelectionChanged="RSS_ArticleListView_SelectionChanged" 
@@ -349,34 +358,24 @@
                     </Grid>
 
 
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" Background="#FF424242">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <ProgressBar x:Name="LoadingProgressBar"
+                                     Height="10"
                                      IsIndeterminate="True"
-                                     Visibility="Collapsed"/>
+                                     Grid.Row="0"
+                                     Visibility="Collapsed" Foreground="#FF51CAF6"/>
                         <Image Grid.Row="0" Grid.RowSpan="2" Source="Assets/SplashScreen.scale-200.png" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        
+
                         <WebView x:Name="ArticleWebView"
                                  Grid.Row="1"
                                  DefaultBackgroundColor="#FF373737"
-                                 Visibility="Visible"
+                                 Visibility="Collapsed"
                                  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"/>
-
-                        
                     </Grid>
-
-
-                    <!--<ContentControl Grid.Column="1"
-                                    VerticalContentAlignment="Stretch" 
-                                    HorizontalContentAlignment="Stretch"
-                                    >
-                        
-                        <WebView x:Name="articleWebView"
-                                 Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"></WebView>
-                    </ContentControl>-->
                 </Grid>
             </SplitView.Content>
 
