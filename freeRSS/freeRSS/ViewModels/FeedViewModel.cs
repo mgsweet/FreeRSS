@@ -226,6 +226,8 @@ namespace freeRSS.ViewModels
             get
             {
                 var a = new List<ArticleModel>();
+                if (this.Id == 0) return a.ToArray();
+
                 int count = 5;
                 foreach (var item in this.Articles)
                 {

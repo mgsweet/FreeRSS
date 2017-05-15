@@ -69,9 +69,10 @@ namespace freeRSS.ViewModels
             .ToList().ForEach(article =>
             {
                 //article.InitialOnlyBindingProperty(f);
+                // 在这里总是有小问题
                 article.FeedName = "My Favourite";
                 article.Summary = article.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
-                article.FeedIconSourceAsString = f.IconSrc.AbsolutePath;
+                article.FeedIconSourceAsString = f.IconSrc == null ? DEFAULT_HEAD_PATH : f.IconSrc.AbsolutePath;
                 f.Articles.Insert(0, article);
             });
         }
@@ -270,7 +271,7 @@ namespace freeRSS.ViewModels
         {
             a.FeedName = feedViewModel.Name;
             a.Summary = a.Description.RegexRemove("\\&.{0,4}\\;").RegexRemove("<.*?>");
-            a.FeedIconSourceAsString = feedViewModel.IconSrc.AbsolutePath;
+            a.FeedIconSourceAsString = feedViewModel.IconSrc == null ? DEFAULT_HEAD_PATH : feedViewModel.IconSrc.AbsolutePath;
         }
 
         public static void UpdateArticlesFeedName(this FeedViewModel feedViewModel)

@@ -43,7 +43,12 @@ namespace freeRSS.Models
             get { return _isStarred; }
             set {
                 SetProperty(ref _isStarred, value);
-                if (this.Id != null) SQLiteService._db.UpdateAsync(this.AbstractInfo());
+                if (this.Id != null)
+                {
+                    if (IsStarred) MainPage.Current.ViewModel.StarredFeed.Articles.Add(this);
+                    else MainPage.Current.ViewModel.StarredFeed.Articles.Remove(this);
+                    SQLiteService._db.UpdateAsync(this.AbstractInfo());
+                }
             }
         }
 
