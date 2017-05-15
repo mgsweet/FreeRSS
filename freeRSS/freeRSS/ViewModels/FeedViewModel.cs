@@ -49,8 +49,8 @@ namespace freeRSS.ViewModels
         }
 
         // 图标应该是不能够再给用户设置的，所以这里就没有有SourceAsString来给用户方便自己输入string型的URI
-        private Uri _iconSrc;
-        public Uri IconSrc
+        private string _iconSrc = string.Empty;
+        public string IconSrc
         {
             get { return _iconSrc; }
             set { SetProperty(ref _iconSrc, value);
@@ -108,7 +108,7 @@ namespace freeRSS.ViewModels
             _name = "My Favourites";
             _description = "There are all my favourite articles.";
             _source = null;
-            _iconSrc = null;
+            _iconSrc = string.Empty;
             _lastBuildedTime = DateTimeOffset.Now.ToString();
 
             Articles = new ObservableCollection<ArticleModel>();
@@ -126,7 +126,7 @@ namespace freeRSS.ViewModels
             // 可能这里的source会有两次重复设置，注意一下避免冗余
             _source = new Uri(f.Source);
             SourceAsString = f.Source;
-            _iconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
+            _iconSrc = (f.Id == null) ? string.Empty : f.IconSrc;
             _lastBuildedTime = f.LastBuildedTime;
             _description = f.Description;
 

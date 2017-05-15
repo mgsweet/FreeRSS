@@ -13,7 +13,6 @@ namespace freeRSS.Schema
         [NotNull]
         public string Source { get; set; }
 
-        [NotNull]
         public string IconSrc { get; set; }
 
         [NotNull]
