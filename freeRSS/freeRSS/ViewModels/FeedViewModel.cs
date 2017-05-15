@@ -49,13 +49,12 @@ namespace freeRSS.ViewModels
         }
 
         // 图标应该是不能够再给用户设置的，所以这里就没有有SourceAsString来给用户方便自己输入string型的URI
-        private Uri _iconSrc;
-        public Uri IconSrc
+        private string _iconSrc = string.Empty;
+        public string IconSrc
         {
             get { return _iconSrc; }
             set {
                 SetProperty(ref _iconSrc, value);
-                //先将就下
             }
         }
 
@@ -110,7 +109,7 @@ namespace freeRSS.ViewModels
             _name = "My Favourites";
             _description = "There are all my favourite articles.";
             _source = null;
-            _iconSrc = null;
+            _iconSrc = string.Empty;
             _lastBuildedTime = DateTimeOffset.Now.ToString();
 
             Articles = new ObservableCollection<ArticleModel>();
@@ -128,7 +127,7 @@ namespace freeRSS.ViewModels
             // 可能这里的source会有两次重复设置，注意一下避免冗余
             _source = new Uri(f.Source);
             SourceAsString = f.Source;
-            _iconSrc = (f.Id == null) ? null : new Uri(f.IconSrc);
+            _iconSrc = (f.Id == null) ? string.Empty : f.IconSrc;
             _lastBuildedTime = f.LastBuildedTime;
             _description = f.Description;
 
@@ -216,10 +215,10 @@ namespace freeRSS.ViewModels
 
         // 9. total Unread Num
         // 要考虑下是不是每次触发了unread都去遍历一次article看有多少文章未读，还是直接减一
-        private int? _unreadNum;
-        public int? UnreadNum
+        private int _unreadNum = -1;
+        public int UnreadNum
         {
-            get { return _unreadNum??(int?)this.Articles.ToList().Where(x => x.UnRead == true).Count(); }
+            get { return _unreadNum > 0 ? _unreadNum : this.Articles.ToList().Where(x => x.UnRead == true).Count() ; }
             set { SetProperty(ref _unreadNum, value); }
         }
 
@@ -228,9 +227,16 @@ namespace freeRSS.ViewModels
             get
             {
                 var a = new List<ArticleModel>();
-                for (int i = 0; i < 5; ++i)
+                if (this.Id == 0) return a.ToArray();
+
+                int count = 5;
+                foreach (var item in this.Articles)
                 {
-                    a.Add(Articles[i]);
+                    if (item.UnRead)
+                    {
+                        a.Add(item);
+                        if (--count < 0) break;
+                    }
                 }
                 return a.ToArray();
             }
