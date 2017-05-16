@@ -2,7 +2,7 @@
 ---
 FreeRSS是一个设计美观，风格独特，宣扬随性自由阅读的RSS阅读器应用。它有着优秀的自适应界面设计、不错的MVVM框架、完整的数据库设计。诞生自中山大学现代操作系统一次期中作业，但我们并没有把他仅仅当作一个作业来做。倾尽微薄的UWP知识储备，希望大家喜欢。
 *This APP runs on the Universal Windows Platform (UWP)*
-![Alt text](./ZTT4Y8J8EXIDLNTCND.png)
+![Alt text](https://raw.githubusercontent.com/mgsweet/uwp-RSS-project/dev/Image/appShow.png)
 
 ##亮点：
 1. 图标：图标部分参考了[Creativedash](https://dribbble.com/IgorCheb)在[dribbble.com](https://dribbble.com/IgorCheb)里发布的图标设计，适合整体风格，而且在界面中时有体验，加深用户印象。
