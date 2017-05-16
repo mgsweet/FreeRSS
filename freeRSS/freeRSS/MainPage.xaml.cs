@@ -127,20 +127,24 @@ namespace freeRSS
         /// </summary>
         private void FeedTotalList_ItemClick(object sender, ItemClickEventArgs e)
         {
-            ViewModel.CurrentArticle = null;
             ViewModel.CurrentFeed = ViewModel.StarredFeed;
             FeedsList.SelectedItem = null;
+            RSS_ArticleListView.SelectedIndex = RSS_ArticleListView.Items.Count > 0 ? 0 : -1;
         }
 
 
         private void RSS_ArticleListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (RSS_ArticleListView.SelectedItem != null)
+            if (RSS_ArticleListView.SelectedIndex >= 0)
             {
                 ArticleWebView.Visibility = Visibility.Collapsed;
                 LoadingProgressBar.Visibility = Visibility.Visible;
                 ViewModel.CurrentArticle = (ArticleModel)RSS_ArticleListView.SelectedItem;
                 ViewModel.CurrentArticle.UnRead = false;
+            }
+            else
+            {
+                ArticleWebView.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -165,8 +169,9 @@ namespace freeRSS
         {
             if (ViewModel.CurrentFeed != null)
             {
+
                 await ViewModel.CurrentFeed.RefreshAsync();
-                //UpdateTile.UpDateTile(ViewModel.CurrentFeed.NewestArticles);
+                UpdateTile.UpDateTile(ViewModel.CurrentFeed.NewestArticles);
             }
         }
     }

@@ -22,6 +22,7 @@ namespace freeRSS.Common
             var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             var matchStrings = regex.Matches(sourceTimeString);
 
+
             // 取子表达式
             int Year, Month, Day, Hour, Minute, Second, OffsetHour, OffsetMin;
             TimeSpan Offset;
