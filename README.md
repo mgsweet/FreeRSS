@@ -1,78 +1,75 @@
-# uwp-RSS-project
-现代操作系统期中项目
-
-## Deadline
-第12周   5月14日 前 提交成品
-
-## Refference
- 1. 相关的解析rss feed的代码实践与结构熟悉
- 2. [RSS feed reader implementation in C#](http://czetsuya-tech.blogspot.com/2011/01/rss-feed-reader-implementation-in-c.html), use xmlreader to read the rss
- 3. [Best Way to read rss feed in .net Using C#](http://stackoverflow.com/questions/10399400/best-way-to-read-rss-feed-in-net-using-c-sharp),use `System.ServiceModel.Syndication` to read the rss
- 4. [How to Parse RSS Feeds in .NET](https://www.codeproject.com/Articles/820669/How-to-Parse-RSS-Feeds-in-NET),use `stringbuilder` to help us construct the rss content
- 5. [Creating Your Own RSS Reader In C#](http://www.dreamincode.net/forums/topic/34745-creating-your-own-rss-reader-in-c%23/)非常详细，看起来可以深入浅出地写了整个流程，还提供了源代码，我应该会着重看这一篇教程，需要翻墙。
-
-## 开发日志
-### 2017/4/28 UI 1.0 
-By Mr.gu
-#### 坑：
-1. 本次UI还有很多坑没有去填好，一是程序处于飞活动状态时右上角的BUTTON尚未设置；
-2. 是响应式布局还没怎么弄
-3. 只完成了简单的XAML编程，并无数据绑定，这需要框架~
-4. WEBVIEW没研究过，这需要实现RSS的时候再弄
-5. 具体需要在UI上呈现的后台数据面对面讨论
-
-#### 特点：
-1. 学习了用STYLE文件去统一定义样式的方法，虽然现在还有很多样式定义在XAML里
-2. 将控件嵌入了Title bar
-3. 学习了对BUTTON的控件自定义
-
-#### 参考：
-![Alt text](./Screen Shot 2017-04-28 at 8.19.05 PM.png)
-
- Good artists copy great artists steal. 	 ---Steve Jobs
-
- ----
- ### 2017/04/30
- By longj
- #### 相关学习资料
- 1. 相关的解析rss feed的代码实践与结构熟悉
-    2.[RSS feed reader implementation in C#](http://czetsuya-tech.blogspot.com/2011/01/rss-feed-reader-implementation-in-c.html), use xmlreader to read the rss
-    3.[Best Way to read rss feed in .net Using C#](http://stackoverflow.com/questions/10399400/best-way-to-read-rss-feed-in-net-using-c-sharp),use `System.ServiceModel.Syndication` to read the rss
-    4.[How to Parse RSS Feeds in .NET](https://www.codeproject.com/Articles/820669/How-to-Parse-RSS-Feeds-in-NET),use `stringbuilder` to help us construct the rss content
-    5.[Creating Your Own RSS Reader In C#](http://www.dreamincode.net/forums/topic/34745-creating-your-own-rss-reader-in-c%23/)非常详细，看起来可以深入浅出地写了整个流程，还提供了源代码，我应该会着重看这一篇教程，需要翻墙。
-
-### 2017/05/04
-1. [We can get general Rss structure in this article](https://www.w3schools.com/xml/xml_rss.asp)
-So the general structure of Rss request is:
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
-
-<channel>
-  <title>W3Schools Home Page</title>
-  <link>https://www.w3schools.com</link>
-  <description>Free web building tutorials</description>
-  <item>
-    <title>RSS Tutorial</title>
-    <link>https://www.w3schools.com/xml/xml_rss.asp</link>
-    <description>New RSS tutorial on W3Schools</description>
-  </item>
-  <item>
-    <title>XML Tutorial</title>
-    <link>https://www.w3schools.com/xml</link>
-    <description>New XML tutorial on W3Schools</description>
-  </item>
-</channel>
-</rss>
-```
-So we maybe can use one parse function to decode different Rss feed.
-
-2. 更新出来整个程序的总体结构，请见文件夹下的相关照片
+#FreeRSS
 ---
-### 2017/5/4  增加了一些小部件
-By Mr.gu
+FreeRSS是一个设计美观，风格独特，宣扬随性自由阅读的RSS阅读器应用。它有着优秀的自适应界面设计、不错的MVVM框架、完整的数据库设计。诞生自中山大学现代操作系统一次期中作业，但我们并没有把他仅仅当作一个作业来做。倾尽微薄的UWP知识储备，希望大家喜欢。
+*This APP runs on the Universal Windows Platform (UWP)*
+![Alt text](./ZTT4Y8J8EXIDLNTCND.png)
 
-#### 进度：
-1. 设置了圆角
-2. 完成了中间控件的设计
-3. 添加了content dialog设计， 完成点击ADD号弹出的UI
+##亮点：
+1. 图标：图标部分参考了[Creativedash](https://dribbble.com/IgorCheb)在[dribbble.com](https://dribbble.com/IgorCheb)里发布的图标设计，适合整体风格，而且在界面中时有体验，加深用户印象。
+2. 界面：我们的自适应界面是十分美观的，我们在很多细节上投入了极大量的时间，例如实现了从feed里获取图标并对图标图片进行数据绑定，当然图标的文件也是本地存储了的，Feed对应的图标名字有数据库存储。
+3. 响应式设计：按照msdn推荐的宽度尺寸我们分别设计了针对`320`、`720`、`1024`屏幕尺寸的自适应，使应用更加美观。
+4. 细节： 细节决定成败，为了提供更出色的界面与功能，我们不单单设计了便于用户理解的feed小图标，我们还为文章的unread数目做了统计，同时feed的名字是可改的，feed不单单能被删除，还能删除里面的文章，用户还能为feed改名字，对于喜欢的文章，用户更能通过点击右上角的星星收藏应用。
+5.  交互：我们在响应时间做了响应的考虑和优化，设置了不同的动画来辅助交互效果，增加用户体验流畅度。
+6. 性能：从底部到界面尽可能都使用**异步方法**，使得用户体验良好，在设计比较大的网络访问的情况下可以保证界面的不卡顿。
+
+
+## 项目难点以及解决方法
+### 整体架构：
+1. 底层数据库第三方库`sqlite-net-pcl`,采用orm方式异步操作数据库
+2. `Service/` 封装了`sqlite-net-pcl`,在项目开始运行的时候构建异步数据库连接，然后负责数据库的增删改查
+3. `Schema/`文件夹存放的是数据库的结构，通过attribute和类的表现形式可以与sqlite-net-pcl使用orm的异步操作
+4. `Common/`文件夹存放的是共有一些类，其中`BindableBase`封装了`INotification`的接口，方便后面的书写。
+5. `ViewModel`文件夹就是业务逻辑的主要实现部分，其中`MainViewModel`是与前端直接交互的，`FeedViewModel`是对于一个Feed的组织形式，`Model/ArticleModel`则是存放一篇文章的各种属性，这三个采取嵌套的构成方式，以ObservableCollection为容器，总体概述是**一个MainViewModel里面有多个FeedViewModel， 一个FeedViewModel包含多个ArticleModel**
+6. `ViewModel/FeedDataSource.cs`是这个项目的一个重点，它是一个static类，主要是实现了许多扩展方法，方便了整个代码风格的简介。这个类主要是负责给前端生成数据（1. 通过网络获取 2.通过数据库获取已经存好的文章）。如果通过网络获取的话，还会进行内容解析，然后构建相应的FeedViewModel和ArticleModel,并且与数据库相交互
+7. 前端的数据更新一些必要的数据(如：是否被收藏)可能就直接更新了数据库了，虽然这样可能不太符合MVVM，但是这样写起来的确简洁
+8. 前端实现的功能通过调用后台的函数逻辑，在`ViewModel`里面处理，最后实现相关功能
+
+###前端主要难点
+1. Style统一管理
+我们优秀的界面设计当然少不了一大堆的自定义控件和属性，而管理这么多属性和控件有一定难度。为了美化代码，方便管理，我们学习了对`ResourceDictionary`和`ResourceDictionary.MergedDictionaries`的使用，将大部分的自定义控件设计放到了`style.xml`文件里面，同时将转换器也放到了`ResourceDictionary`里，实现良好的UI管理。
+
+2. 自定义控件的使用
+为了有统一的风格，部分button的设计用到了自定义控件，通过学习了解VS能自动生成模板，然后到模板里面把自己想改的改掉就好了。
+
+3. feed小图标的实现
+由于获取图标要通过网络异步访问，这导致前端和后端配合协同开发很重要，单单是为了获取这个图片就一波三折，先是自己写了个`WebIconDownloadTool`静态类去实现各种例如获取网站主页url、从html中正则匹配获取icon地址、下载网络图片等工具，后来因为兼容性太低改用了google的工具，但缺点是导致应用最佳体验一定要翻墙。然后就是异步绑定，因为从网站获取资源要用异步的方法，文件读写也要异步，而`converter`其实默认是不异步的，所以不能直接 `x:bind`，这就需要一个默认的`ImageSource`对象，但因为一开始没考虑到这些，所以必须在外部创建feedViewModel的时候加入，而且还要做好绑定，这耗费了大量时间。
+
+4. 响应式设计
+一开始做了一个很好的小屏幕解决方法，但由于一开始使用
+  ```
+private GridLength oneStarGridLength = new GridLength(1,GridUnitType.Star);
+```
+这种方法去更改Grid的大小对性能的开销极大，导致在小界面时候及其卡顿，后面忍痛割爱，将其舍去，但剩下的自适应设计也是经过深思熟虑，每个px都经过思考。
+
+5. Live Visual Tree的学习与使用
+对部分UI不响应事件的问题一开始很是困扰，加上如果每次修改属性都要重新打开一次应用的话，将会耗费大量时间，通过Live Visual Tree的使用，UI开发的难度大大降低。
+6. 与后台对接
+为了能和后台的数据对接上，为了更好地绑定，实现了各种`IValueConverter``，但后来发现这东西不能绑异步的东西，所以就有了先初始化等异步执行完再触发绑定这种解决思路。
+7. Content Dialog的设计与使用
+这东西有很多隐藏属性，然后调用的时候也很有技巧，放在`view`里面结合`MainViewModel`解决了很多管理上了链接上的问题。
+
+
+
+### 后台主要难点
+1. 数据库的学习使用
+2. [GitHub仓库参考文档](https://github.com/praeclarum/sqlite-net)
+3. 主要是要学习ORM的使用风格，主要难点是处理自增主键Id的时候会出现实际插入数据库前不知道具体Id的值的问题，通过研究发现C#语言里面以引用传递为主要传递的风格帮助很大，自增主键的类型设为`int?`当Id为null的时候就是还没有插入数据库，插入了之后原来的类里面的属性也会有相应的改动。
+2. INotifyPropertyChanged的实现，这里参考了`Microsoft 官方UWP RssReader`的实现方法，封装了一个基类，是的后面的扩展变得方便起来
+3. 图标缓存功能，如何获得发布源的favicon是其中的一大难题，因为不同的格式会有不同的结构，也不是所有的发布源会把图标给出来，然后又考虑到要有关闭网络的时候可以正确显示图标。最终的解决思路是在加入新的feed的时候尝试下载图标，失败的话就使用默认的图标。 其中使用到了`Google`提供的工具库`http://www.google.com/s2/favicons?domain_url={QueryUrl}`来进行搜索和下载。这里面就涉及到了很重要的问题，体验这个功能需要电脑可以全局跳出长城，这里提供一个[免费的限流量的软件](https://github.com/getlantern/lantern)供TA进行检查体验
+4. 收藏栏的实现的特殊性：因为实际上，对于收藏栏，虽然表面上是FeedViewModel,但是实际上它不是普通的`FeedViewModel`，它的获取源应该是无用的，它是不会存在数据库的FeedInfo表里面的，它的构建应该是要依赖于其他的Feed，所以在实现的时候就会出现很多逻辑的错误，最后发现这个问题后，基本上另外写了一些方法以支持收藏栏的构造。
+5. 进一步明白了属性和字段的区别，一些与状态有关的属性，状态改变的时候需要同时进行其他的操作，这个时候应该在set函数里面实现相关逻辑，但是，当在后台手动构造一个实例的时候，构造函数里面的赋值直接赋值给属性就会出错，因为这个时候数据库里面还没有相关的数据，这个时候，提供私有的相关字段就变得很有必要，在构造的时候对私有字段赋值即可避免相关问题
+6. 参考官方代码的时候，学习了其中的架构，但是官方代码的feed和favourite是通过文件存储的，而且文章没有办法缓存起来，我们这个底层改用数据库存储，从下往上基本上重写了需要的方法。其中有一些多余的属性没有去除，留着以后有用，可以用来优化我们的交互事件
+
+
+## 项目总结：
+###前端：
+1. 基本一个人负责了前端UI以及交互的设计，因为要思考各种逻辑，所以其实更难的是设计而不是编程，当然，UWP的编程学习也是遇到了不少坑，解决各种问题也是耗费了大量的时间。
+2. 其实一开始和后端没有很好的沟通，导致开发开发着对接起来就有很大难度，到了后期基本都是每晚汇总一下工作情况，商量整体实现逻辑，在这种模式下对接起来就简单很多，互相知道另外一边需要点什么，然后完成开发，实现更好的前后端合作。
+3. 管理github，更深入学习到了github的各种使用，更深入地学习冲突的解决，也更明白了分工的重要性。
+4. 依然需要将xmal里面的代码做成自定义控件，美化代码。
+###后台：
+1. 一个人负责后台实现，已经可以基本hold住整个后台的构思流程，虽然发现最后数据库结构设计有缺陷，但是总体来说是一个很好的联系流程
+2. 第一次在GitHub上开发没有遇到极大的冲突问题，整个开发流程比较顺畅
+3. 对于后台的c#语言的语法还有一些tricker的实现无疑是最大的，学习官方代码的时候，会不断了解学习一些有用表达和符号，然后自己实现的时候再反复运用，收货良多，其中c#的扩展方法极大地开阔了我的眼界
+4. 可能代码还有些冗余，以后迭代的时候再不断完善
+5. 这是我GitHub上第一个，看起来可以继续维护的，真的做出了一个可用的，可持续发展的软件，还是很有成就感的
