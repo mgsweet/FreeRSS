@@ -1,10 +1,10 @@
-#FreeRSS
+# FreeRSS
 ---
 FreeRSS是一个设计美观，风格独特，宣扬随性自由阅读的RSS阅读器应用。它有着优秀的自适应界面设计、不错的MVVM框架、完整的数据库设计。诞生自中山大学现代操作系统一次期中作业，但我们并没有把他仅仅当作一个作业来做。倾尽微薄的UWP知识储备，希望大家喜欢。
 *This APP runs on the Universal Windows Platform (UWP)*
 ![Alt text](https://raw.githubusercontent.com/mgsweet/uwp-RSS-project/dev/Image/appShow.png)
 
-##亮点：
+## 亮点：
 1. 图标：图标部分参考了[Creativedash](https://dribbble.com/IgorCheb)在[dribbble.com](https://dribbble.com/IgorCheb)里发布的图标设计，适合整体风格，而且在界面中时有体验，加深用户印象。
 2. 界面：我们的自适应界面是十分美观的，我们在很多细节上投入了极大量的时间，例如实现了从feed里获取图标并对图标图片进行数据绑定，当然图标的文件也是本地存储了的，Feed对应的图标名字有数据库存储。
 3. 响应式设计：按照msdn推荐的宽度尺寸我们分别设计了针对`320`、`720`、`1024`屏幕尺寸的自适应，使应用更加美观。
@@ -24,7 +24,7 @@ FreeRSS是一个设计美观，风格独特，宣扬随性自由阅读的RSS阅�
 7. 前端的数据更新一些必要的数据(如：是否被收藏)可能就直接更新了数据库了，虽然这样可能不太符合MVVM，但是这样写起来的确简洁
 8. 前端实现的功能通过调用后台的函数逻辑，在`ViewModel`里面处理，最后实现相关功能
 
-###前端主要难点
+### 前端主要难点
 1. Style统一管理
 我们优秀的界面设计当然少不了一大堆的自定义控件和属性，而管理这么多属性和控件有一定难度。为了美化代码，方便管理，我们学习了对`ResourceDictionary`和`ResourceDictionary.MergedDictionaries`的使用，将大部分的自定义控件设计放到了`style.xml`文件里面，同时将转换器也放到了`ResourceDictionary`里，实现良好的UI管理。
 
