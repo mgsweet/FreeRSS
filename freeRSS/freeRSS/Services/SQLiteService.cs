@@ -1,7 +1,11 @@
 ﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using freeRSS.Models;
 
 namespace freeRSS.Services
 {
@@ -44,6 +48,17 @@ namespace freeRSS.Services
             }
         }
 
+
+        // 这个函数其实应该可能可以舍掉了
+        public async static Task<List<ArticleInfo>> QueryAritclesByFeedSource(string LinkString)
+        {
+            var feedsQuery = _db.Table<FeedInfo>().Where(v => v.Source.Equals(LinkString));
+            var feed = await feedsQuery.FirstOrDefaultAsync();
+
+            var articlesQuery = _db.Table<ArticleInfo>().Where(v => v.FeedId.Equals(feed.Id));
+            return await articlesQuery.ToListAsync();
+        }
+
         /// <summary>
         /// Try to get the old articles of a feedId in the database
         /// </summary>
@@ -58,8 +73,23 @@ namespace freeRSS.Services
             var query = _db.Table<FeedInfo>();
             return await query.ToListAsync();
         }
-
         // Remove的方法
+        public async static Task RemoveAFeed(string LinkString)
+        {
+            var target = new FeedInfo() { Source = LinkString };
+
+            var res_count = await _db.DeleteAsync(target);
+            if (res_count == 1)
+            {
+                Debug.WriteLine("Delete One Feed: {0}", LinkString);
+            } else if (res_count == 0)
+            {
+                Debug.WriteLine("Feed No Delete!: {0}", LinkString);
+            }
+        }
+
+
+        // 其实可能可以使用模板化编程 = =， 以后再改吧
         public async static Task RemoveArticlesAsync(IEnumerable<ArticleInfo> articles)
         {
             foreach (var item in articles)

@@ -89,7 +89,6 @@ namespace freeRSS.ViewModels
 
             this.Feeds.CollectionChanged += (s, e) =>
             {
-                //实际实现不需要监听这个事件，留作以后扩展
                 //OnPropertyChanged(nameof(FeedsWithFavorites));
                 //OnPropertyChanged(nameof(HasNoFeeds));
 
@@ -134,6 +133,11 @@ namespace freeRSS.ViewModels
         }
 
         public async Task SaveArticlesAsync() => await StarredFeed.SaveArticlesAsync();
+
+        public async void getIconTest()
+        {
+            await WebIconDownloadTool.DownLoadIconFrom_WebUri("https://blogs.msdn.microsoft.com/", "111");
+        }
 
         private const string NO_ARTICLES_MESSAGE = "There are no starred articles.";
         private const string ALREADY_ADDED_MESSAGE = "This feed has already been added.";

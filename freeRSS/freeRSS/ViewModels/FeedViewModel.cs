@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 using System.Collections.ObjectModel;
 using freeRSS.Common;
 using freeRSS.Models;

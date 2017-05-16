@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Web.Syndication;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+using Windows.Storage;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 using freeRSS.Models;
 using freeRSS.Common;
 using freeRSS.Schema;
 using freeRSS.Services;
+using Windows.Web.Syndication;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace freeRSS.ViewModels
 {
@@ -53,13 +56,13 @@ namespace freeRSS.ViewModels
             return;
         }
 
-
+        // 添加扩展方法来方便MainViewModel来从上面控制refresh
         /// <summary>
         /// Attempts to update the feed with new data from the server.
-        /// Also contain “insert a new feed" logic here
         /// 想要在原来的基础上加入新的文章
         /// 这是一个可扩展的方法。
         /// </summary>
+        //// Cancellation 还是不是太懂，先保留一下
         public static async Task RefreshAsync(this FeedViewModel feedViewModel, CancellationToken? cancellationToken = null)
         {
             if (feedViewModel.Source.Host == "localhost" ||
@@ -83,6 +86,7 @@ namespace freeRSS.ViewModels
         /// Retrieves feed data from the server and updates the appropriate FeedViewModel properties.
         /// There may be two condition, One is for the Have ReFreshbuild and the orther is not.
         /// </summary>
+        /// 已经修改了变量名使之可以编译，还没有全体check
         private static async Task<bool> TryGetFeedFromServerAsync(FeedViewModel feedViewModel, CancellationToken? cancellationToken = null)
         {
             var originalArticleNum = feedViewModel.Articles.Count;
@@ -107,7 +111,7 @@ namespace freeRSS.ViewModels
                     var homePageLinkString = (feed.IconUri == null) ? feed.Links.Select(l => l.Uri).FirstOrDefault().ToString() : feed.IconUri.ToString();
                     await feedViewModel.TryUpdateIconSource(homePageLinkString);
 
-                    // 先在UI上添加，缩短响应时间
+                    // 现在UI上添加，缩短响应时间
                     MainPage.Current.ViewModel.Feeds.Add(feedViewModel);
                     isHaveNewArticles = true;
                 }
@@ -192,9 +196,6 @@ namespace freeRSS.ViewModels
             }
         }
 
-        /// <summary>
-        /// 清除已经阅读的又没有收藏的文章
-        /// </summary>
         public static async Task ClearOutTimeArticlesAsync(this FeedViewModel feedViewModel)
         {
             var original = feedViewModel.Articles;
@@ -228,12 +229,26 @@ namespace freeRSS.ViewModels
         }
 
         /// <summary>
+        /// Saves the feed data (not including the Favorites feed) to DataBases. 
+        /// </summary>
+        public static async Task SaveAsync(this IEnumerable<FeedViewModel> feeds) 
+        {
+            await SQLiteService.SaveFeedsInfoAsync(feeds.Select(feed => feed.AbstractInfo()));
+        }
+
+        /// <summary>
         /// Saves the favorites feed (the first feed of the feeds list) to local storage. 
         /// </summary>
         public static async Task SaveArticlesAsync(this FeedViewModel feedviewmodel)
         {
             await SQLiteService.SaveArticlesInfoAsync(feedviewmodel.Articles.Select(article => article.AbstractInfo()));
         }
+
+        private const string BAD_URL_MESSAGE = "Hmm... Are you sure this is an RSS URL?";
+        private const string NO_REFRESH_MESSAGE = "Sorry. We can't get more articles right now.";
+        private const string DEFAULT_HEAD_PATH = "ms-appx:///Assets/default/DefaultHead.png";
+
+        public static String RegexRemove(this string input, string pattern) => Regex.Replace(input, pattern, string.Empty);
 
         public static void InitialOnlyBindingProperty(this ArticleModel a, FeedViewModel feedViewModel)
         {
@@ -255,12 +270,5 @@ namespace freeRSS.ViewModels
                 feedViewModel.Articles.Add(x);
             }
         }
-
-        private const string BAD_URL_MESSAGE = "Hmm... Are you sure this is an RSS URL?";
-        private const string NO_REFRESH_MESSAGE = "Sorry. We can't get more articles right now.";
-        private const string DEFAULT_HEAD_PATH = "ms-appx:///Assets/default/DefaultHead.png";
-
-        public static String RegexRemove(this string input, string pattern) => Regex.Replace(input, pattern, string.Empty);
-
     }
 }
