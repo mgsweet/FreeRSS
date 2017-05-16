@@ -37,9 +37,15 @@ namespace freeRSS.View
         {
             // Ensure the Feed or Site URL fields isn't empty. If a required field
             // is empty, set args.Cancel = true to keep the dialog open.
+            if (MainPage.Current.ViewModel.CurrentFeed.Id == 0)
+            {
+                args.Cancel = true;
+                errorTextBlock.Text = "You can not Edit Favourites";
+                return;
+            }
+
             if (string.IsNullOrEmpty(feedTextBox.Text))
             {
-                //直接跳出不做更改
                 args.Cancel = true;
                 errorTextBlock.Text = "Feed should have a name.";
                 return;
@@ -81,18 +87,26 @@ namespace freeRSS.View
         /// </summary>
         private async void DeleteFeedButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            // 删除
-            await MainPage.Current.ViewModel.CurrentFeed.RemoveRelatedArticlesAsync();
-            await MainPage.Current.ViewModel.CurrentFeed.RemoveAFeedAsync();
-            MainPage.Current.ViewModel.Feeds.Remove(MainPage.Current.ViewModel.CurrentFeed);
+            if (MainPage.Current.ViewModel.CurrentFeed.Id == 0)
+            {
+                errorTextBlock.Text = "You can not delete Favourites";
+                return;
+            }
+            else
+            {
+                // 删除
+                await MainPage.Current.ViewModel.CurrentFeed.RemoveRelatedArticlesAsync();
+                await MainPage.Current.ViewModel.CurrentFeed.RemoveAFeedAsync();
+                MainPage.Current.ViewModel.Feeds.Remove(MainPage.Current.ViewModel.CurrentFeed);
 
-            // 重新初始化CurrentFeed 和 CurrentArticle
-            MainPage.Current.ViewModel.CurrentFeed = MainPage.Current.ViewModel.Feeds.Count == 0 ?
-                MainPage.Current.ViewModel.StarredFeed :
-                MainPage.Current.ViewModel.Feeds[0];
+                // 重新初始化CurrentFeed 和 CurrentArticle
+                MainPage.Current.ViewModel.CurrentFeed = MainPage.Current.ViewModel.Feeds.Count == 0 ?
+                    MainPage.Current.ViewModel.StarredFeed :
+                    MainPage.Current.ViewModel.Feeds[0];
 
-            MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
-            this.Hide();
+                MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
+                this.Hide();
+            }
         }
     }
 }

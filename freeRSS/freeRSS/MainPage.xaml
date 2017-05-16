@@ -191,7 +191,10 @@
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
+                
+                <!--this button in the 1.0 have no need-->
                 <Button Grid.Column="0"
+                        Visibility="Collapsed"
                         Content="&#xE112;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
                         Width="48" Height="32" Foreground="White" Style="{StaticResource myTitleButton}"
                         />
