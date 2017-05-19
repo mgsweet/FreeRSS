@@ -20,7 +20,8 @@ namespace freeRSS.Common
             var regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             XmlNodeList texts = xmlDocument.GetElementsByTagName("text");
 
-            for (int j = 0; j < 5; j++)
+            int newArticlNum = (articleArray.Length < 5) ? articleArray.Length : 5;
+            for (int j = 0; j < newArticlNum; j++)
             {
                 Models.ArticleModel article = (Models.ArticleModel)articleArray.GetValue(j);
                 for (int i = 0; i < texts.Length - 2; i += 2)
