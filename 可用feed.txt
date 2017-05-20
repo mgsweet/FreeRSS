@@ -1,0 +1,9 @@
+可以运行的feed
+知乎日报 http://feeds.feedburner.com/zhihu-daily
+知乎每日精华 https://www.zhihu.com/rss
+nhzy资讯（健康生活）http://www.nhzy.org/feed
+月光博客 https://www.zhihu.com/question/19580096
+理想生活实验室 http://www.toodaylab.com/feed
+经济学人中文版 http://blog.ecocn.org/feed
+战隼的学习探索 http://www.read.org.cn/feed
+极客公园 http://www.geekpark.net/rss
