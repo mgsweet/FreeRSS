@@ -5,6 +5,15 @@ FreeRSS是一个设计美观，风格独特，宣扬随性自由阅读的RSS阅�
 
 ![Alt text](https://raw.githubusercontent.com/mgsweet/uwp-RSS-project/dev/Image/appShow.png)
 
+## 更新：
+**1.01**
+消除了了无文章无feed点收藏按钮闪退的bug
+降低了可运行版本
+修复了磁贴bug
+
+## 注意：
+小图标获取功能需要翻墙
+
 ## 亮点：
 1. 图标：图标部分参考了[Creativedash](https://dribbble.com/IgorCheb)在[dribbble.com](https://dribbble.com/IgorCheb)里发布的图标设计，适合整体风格，而且在界面中时有体验，加深用户印象。
 2. 界面：我们的自适应界面是十分美观的，我们在很多细节上投入了极大量的时间，例如实现了从feed里获取图标并对图标图片进行数据绑定，当然图标的文件也是本地存储了的，Feed对应的图标名字有数据库存储。
@@ -74,3 +83,5 @@ private GridLength oneStarGridLength = new GridLength(1,GridUnitType.Star);
 3. 对于后台的c#语言的语法还有一些tricker的实现无疑是最大的，学习官方代码的时候，会不断了解学习一些有用表达和符号，然后自己实现的时候再反复运用，收货良多，其中c#的扩展方法极大地开阔了我的眼界
 4. 可能代码还有些冗余，以后迭代的时候再不断完善
 5. 这是我GitHub上第一个，看起来可以继续维护的，真的做出了一个可用的，可持续发展的软件，还是很有成就感的
+
+

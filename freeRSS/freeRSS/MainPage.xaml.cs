@@ -36,6 +36,10 @@ namespace freeRSS
             {
                 //viewModel 初始化
                 await ViewModel.InitializeFeedsAsync();
+                if (FeedsList.Items.Count == 0)
+                {
+                    FeedTotalList.SelectedIndex = 0;
+                }
                 FeedsList.SelectedIndex = FeedsList.Items.Count > 0 ? 0 : -1;
                 RSS_ArticleListView.SelectedIndex = RSS_ArticleListView.Items.Count > 0 ? 0 : -1;
             };
