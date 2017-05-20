@@ -109,7 +109,13 @@ namespace freeRSS.View
                     MainPage.Current.ViewModel.StarredFeed :
                     MainPage.Current.ViewModel.Feeds[0];
 
-                MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
+                if(MainPage.Current.ViewModel.CurrentFeed.Articles.Count > 0)
+                {
+                    MainPage.Current.ViewModel.CurrentArticle = MainPage.Current.ViewModel.CurrentFeed.Articles[0] ?? null;
+                } else
+                {
+                    MainPage.Current.ViewModel.CurrentArticle = null;
+                }
                 this.Hide();
             }
         }

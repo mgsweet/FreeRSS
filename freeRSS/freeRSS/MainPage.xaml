@@ -381,7 +381,7 @@
                         <WebView x:Name="ArticleWebView"
                                  Grid.Row="1"
                                  DefaultBackgroundColor="#FF424242"
-                                 Visibility="Collapsed"
+                                 Visibility="{x:Bind ViewModel.CurrentFeed.IsNotEmpty, Mode=OneWay}"
                                  Source="{x:Bind ViewModel.CurrentArticle.SourceAsString, Mode=OneWay}"/>
                     </Grid>
                 </Grid>
