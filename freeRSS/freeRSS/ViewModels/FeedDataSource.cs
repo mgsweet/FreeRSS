@@ -125,6 +125,7 @@ namespace freeRSS.ViewModels
                 if (isHaveNewArticles || feedViewModel.Articles.Count() == 0)
                 {
                     var articleInfoList = new List<ArticleInfo>();
+                    int newUnread = 0;
                     // Get Article from the newly getted feed And sync
                     foreach (var item in feed.Items)
                     {
@@ -144,7 +145,10 @@ namespace freeRSS.ViewModels
                         // 初始化那些不存在数据库里面的用于绑定的属性
                         newArticle.InitialOnlyBindingProperty(feedViewModel);
                         feedViewModel.Articles.Insert(0, newArticle);
+                        ++newUnread;
                     }
+                    // Update the unreadNum after a new refresh
+                    MainPage.Current.ViewModel.Feeds.Where(x => x.SourceAsString == feedViewModel.SourceAsString).First().UnreadNum += newUnread;
                 } else
                 {
                     Debug.Write("The feed is already the newest.");
