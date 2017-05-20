@@ -169,7 +169,6 @@ namespace freeRSS
         {
             if (ViewModel.CurrentFeed != null)
             {
-
                 await ViewModel.CurrentFeed.RefreshAsync();
                 UpdateTile.UpDateTile(ViewModel.CurrentFeed.NewestArticles);
             }

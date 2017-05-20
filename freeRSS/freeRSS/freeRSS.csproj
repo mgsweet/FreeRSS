@@ -96,6 +96,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\BindableBase.cs" />
+    <Compile Include="Common\BooleanToNullableConverter.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
     <Compile Include="Common\boolToWidthAllConverter.cs" />
     <Compile Include="Common\DateTimeOffSetStringToDateTime.cs" />

@@ -204,11 +204,13 @@
 
                 <!-- 空心：&#xE1CE;;  实心： &#xE249;  -->
                 <ToggleButton Grid.Column="2"
+                              x:Name="StarredToggleButton"
                               ToolTipService.ToolTip="Favorite"
                               Content="&#xE1CE;" FontFamily="{ThemeResource SymbolThemeFontFamily}"
                               FontSize="14"
-                              IsChecked="{x:Bind ViewModel.CurrentArticle.IsStarred, Mode=TwoWay}"
+                              IsChecked="{x:Bind ViewModel.CurrentArticle.IsStarred, Mode=TwoWay, Converter={StaticResource BooleanToNullableConverter}}"
                               Width="48" Height="32" Foreground="White" 
+                              Visibility="{x:Bind ViewModel.CurrentFeed.IsNotEmpty, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}"
                               Style="{StaticResource topBar_ToggleButtonStyle}"
                         />
                 <Button x:Name="ShareButton" Grid.Column="3"

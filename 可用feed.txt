@@ -1,4 +1,4 @@
-可以运行的feed
+经过测试的feed：
 知乎日报 http://feeds.feedburner.com/zhihu-daily
 知乎每日精华 https://www.zhihu.com/rss
 nhzy资讯（健康生活）http://www.nhzy.org/feed

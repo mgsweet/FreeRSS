@@ -78,6 +78,11 @@ namespace freeRSS.View
         /// </summary>
         private async void DeleteArticlesButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            if (MainPage.Current.ViewModel.CurrentFeed.Id == 0)
+            {
+                errorTextBlock.Text = "You can not delete Article in Favourites";
+                return;
+            }
             await MainPage.Current.ViewModel.CurrentFeed.ClearOutTimeArticlesAsync();
             this.Hide();
         }

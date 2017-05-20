@@ -12,6 +12,7 @@
             <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <common:DateTimeOffSetStringToDateTime x:Key="StringToDateTimeConverter" />
             <common:boolToWidthAllConverter x:Key="BoolToWidthAllConverter" />
+            <common:BooleanToNullableConverter x:Key="BooleanToNullableConverter"/>
 
             <ResourceDictionary.MergedDictionaries>
                 <!-- 
