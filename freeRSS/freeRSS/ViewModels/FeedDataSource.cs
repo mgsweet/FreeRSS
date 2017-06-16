@@ -205,17 +205,26 @@ namespace freeRSS.ViewModels
             var original = feedViewModel.Articles;
 
             // 更新视图集合
-            var temp = feedViewModel.Articles.ToList();
-            temp.RemoveAll(x => x.UnRead == false && x.IsStarred == false);
+            var articleList = feedViewModel.Articles.ToList();
+            var temp = from x in articleList
+                       where x.UnRead == false && x.IsStarred == false
+                       select x;
+            var num = temp.Count();
             foreach (var item in temp)
             {
                 feedViewModel.Articles.Remove(item);
             }
 
+            // 数据库清除相关数据
             var ClearArticles = from x in original
                                 where x.UnRead == false && x.IsStarred == false
                                 select x.AbstractInfo();
             await SQLiteService.RemoveArticlesAsync(ClearArticles);
+
+            //var b = from x in articleList
+            //           where x.UnRead == false && x.IsStarred == false
+            //           select x;
+            //var c = b.Count();
         }
 
         /// <summary>
