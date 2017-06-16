@@ -209,7 +209,6 @@ namespace freeRSS.ViewModels
             var temp = from x in articleList
                        where x.UnRead == false && x.IsStarred == false
                        select x;
-            var num = temp.Count();
             foreach (var item in temp)
             {
                 feedViewModel.Articles.Remove(item);
@@ -220,11 +219,6 @@ namespace freeRSS.ViewModels
                                 where x.UnRead == false && x.IsStarred == false
                                 select x.AbstractInfo();
             await SQLiteService.RemoveArticlesAsync(ClearArticles);
-
-            //var b = from x in articleList
-            //           where x.UnRead == false && x.IsStarred == false
-            //           select x;
-            //var c = b.Count();
         }
 
         /// <summary>
