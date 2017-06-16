@@ -7,6 +7,9 @@ using freeRSS.Common;
 using freeRSS.Services;
 using freeRSS.Schema;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
 
 namespace freeRSS.Models
 {
@@ -20,12 +23,36 @@ namespace freeRSS.Models
 
         public string Description { get; set; }
 
-        public ImageSource FeedIconSource { get; set; }
+        private ImageSource _feedIconSource;
+        public ImageSource FeedIconSource
+        {
+            set
+            {
+                SetProperty(ref _feedIconSource, value);
+            }
+            get
+            {
+                return _feedIconSource;
+            }
+        }
 
         // 只需要用来绑定的属性
         public string Summary { get; set; }
         public int FeedId { get; set; }
-        public string FeedIconSourceAsString { get; set; }
+
+        private string _feedIconSourceAsString;
+        public string FeedIconSourceAsString
+        {
+            set
+            {
+                _feedIconSourceAsString = value;
+                setShortcutIcon(_feedIconSourceAsString);
+            }
+            get
+            {
+                return _feedIconSourceAsString;
+            }
+        }
 
         // 这里不需要SourceAsString,因为这个是一构建好之后就不可以改变的了，
         // 只是在存数据库的时候需要转换成string，在构建的时候直接在构造函数里面写好new Uri即可
@@ -106,6 +133,23 @@ namespace freeRSS.Models
                 Unread = this.UnRead,
                 Isstarred = this.IsStarred
             };
+        }
+
+        private async void setShortcutIcon(string IconName)
+        {
+            if (IconName == "")
+            {
+                //若名字为空用默认ICON
+                FeedIconSource = new BitmapImage(new Uri("ms-appx:///Assets/default/FeedHead.png"));
+            }
+            else
+            {
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(IconName);
+                IRandomAccessStream fileStream = await file.OpenAsync(FileAccessMode.Read);
+                BitmapImage bitmapImage = new BitmapImage();
+                await bitmapImage.SetSourceAsync(fileStream);
+                FeedIconSource = bitmapImage;
+            }
         }
     }
 }
