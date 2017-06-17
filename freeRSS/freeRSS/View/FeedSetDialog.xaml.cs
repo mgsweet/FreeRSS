@@ -63,7 +63,7 @@ namespace freeRSS.View
                 args.Cancel = true;
                 errorTextBlock.Text = "FreeRSS could not find a feed at the specified location.";
                 return;
-            }       
+            }
 
             // 开始尝试添加新的feed
             var newfeed = new FeedViewModel(new FeedInfo {

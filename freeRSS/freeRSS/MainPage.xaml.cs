@@ -160,13 +160,16 @@ namespace freeRSS
 
         private void OnShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
-            var toShare = ViewModel.CurrentArticle;
-            var deferral = args.Request.GetDeferral();
-            DataRequest request = args.Request;
-            request.Data.Properties.Title = toShare.Title;
-            request.Data.Properties.Description = toShare.PubDate;
-            request.Data.SetText(toShare.Summary + "\n" + toShare.SourceAsString);
-            deferral.Complete();
+            if (ViewModel.CurrentArticle != null)
+            {
+                var toShare = ViewModel.CurrentArticle;
+                var deferral = args.Request.GetDeferral();
+                DataRequest request = args.Request;
+                request.Data.Properties.Title = toShare.Title;
+                request.Data.Properties.Description = toShare.PubDate;
+                request.Data.SetText(toShare.Summary + "\n" + toShare.SourceAsString);
+                deferral.Complete();
+            }
         }
 
         private async void buttonSync_Click(object sender, RoutedEventArgs e)
