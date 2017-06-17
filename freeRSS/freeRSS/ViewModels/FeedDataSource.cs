@@ -215,9 +215,8 @@ namespace freeRSS.ViewModels
             }
 
             // 数据库清除相关数据
-            var ClearArticles = from x in original
-                                where x.UnRead == false && x.IsStarred == false
-                                select x.AbstractInfo();
+            var ClearArticles = temp.Select(article => article.AbstractInfo());
+            var num = ClearArticles.Count();
             await SQLiteService.RemoveArticlesAsync(ClearArticles);
         }
 
